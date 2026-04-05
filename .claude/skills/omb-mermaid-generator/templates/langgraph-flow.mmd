@@ -1,0 +1,7 @@
+flowchart TD
+    START([__start__]) --> A[Node A]
+    A --> B{Conditional branch}
+    B -->|condition1| C[Node B]
+    B -->|condition2| D[Node C]
+    C --> END([__end__])
+    D --> END

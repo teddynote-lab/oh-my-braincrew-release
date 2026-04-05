@@ -1,0 +1,14 @@
+flowchart TD
+    REQ[User Request] --> TOOL[Agent generates tool call]
+    TOOL --> CHECK{Requires approval?}
+    CHECK -->|No| EXEC[Auto-execute]
+    CHECK -->|Yes| INT[Interrupt triggered]
+    INT --> DEC{Decision type}
+    DEC -->|approve| RUN[Execute as-is]
+    DEC -->|edit| EDIT[Edit then execute]
+    DEC -->|reject| REJ[Reject + feedback]
+    RUN --> RESUME[Resume execution]
+    EDIT --> RESUME
+    REJ --> RESUME
+    EXEC --> RESUME
+    RESUME --> RESULT[Return result]

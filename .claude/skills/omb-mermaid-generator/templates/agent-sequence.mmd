@@ -1,0 +1,11 @@
+sequenceDiagram
+    participant U as User
+    participant A as Agent
+    participant T as Tool
+
+    U->>A: Request
+    A->>A: Analyze intent
+    A->>T: Call tool
+    T-->>A: Return result
+    A->>A: Generate response
+    A-->>U: Final response

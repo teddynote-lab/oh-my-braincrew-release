@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash:*)",
+      "Bash(mkdir -p /Users/teddy/Dev/github/20-Claude-Code/braincrew-harness/.claude/plans)",
+      "Bash(ln -sf \"../../.omb/plans/2026-04-04-BCRW-PLAN-000083.md\" \"/Users/teddy/Dev/github/20-Claude-Code/braincrew-harness/.claude/plans/BCRW-PLAN-000083.md\")",
+      "Bash(git push:*)"
+    ]
+  }
+}

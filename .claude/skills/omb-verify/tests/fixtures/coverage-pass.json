@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "version": "7.4.0",
+    "timestamp": "2026-03-28T10:00:00",
+    "branch_coverage": false,
+    "show_contexts": false
+  },
+  "files": {
+    "src/api/auth.py": {
+      "summary": {
+        "covered_lines": 43,
+        "num_statements": 50,
+        "percent_covered": 86.0,
+        "percent_covered_display": "86%",
+        "missing_lines": 7,
+        "excluded_lines": 0
+      },
+      "missing_lines": [42, 43, 44, 67, 68, 69, 70],
+      "excluded_lines": []
+    }
+  },
+  "totals": {
+    "covered_lines": 43,
+    "num_statements": 50,
+    "percent_covered": 86.0,
+    "percent_covered_display": "86%",
+    "missing_lines": 7,
+    "excluded_lines": 0
+  }
+}
