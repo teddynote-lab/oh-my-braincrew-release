@@ -7,15 +7,21 @@ description: >
   Validates schema before saving. Triggers on:
   "task", "init pipeline", "create pipeline", "start pipeline", "new session".
 argument-hint: "[template-name|manual] [--name '<pipeline-name>'] [--description '<desc>']"
-allowed-tools: Read, Write, Bash, Grep, Glob, Agent, AskUserQuestion
+allowed-tools: Read, Bash, Grep, Glob, Agent, AskUserQuestion
 ---
 
 # Init Pipeline
 
-Create a new pipeline session file from a pre-made schema template or via interactive Manual mode.
+Create a new pipeline session file deterministically via the `omb task init` CLI command.
+All ID generation, validation, wave computation, and file saving are handled by the CLI — not by inline JSON generation.
 
 <references>
-The following files are for harness development only (not used at skill runtime):
+CLI implementation:
+- `src/omb/commands/task.py` — `omb task init` and `omb task checkpoint` commands
+- `src/omb/pipeline/factory.py` — Pipeline instantiation logic
+- `scripts/init-pipeline.sh` — Shell wrapper for `omb task init`
+
+Data layer (for reference only — not invoked directly):
 - `src/omb/pipeline/types.py` — PipelineState and TaskState models
 - `src/omb/pipeline/definitions.py` — Pipeline templates
 - `src/omb/pipeline/validation.py` — Schema validation
@@ -26,7 +32,7 @@ Pre-made schema templates are stored in `.omb/schema/`.
 
 <completion_criteria>
 - Session JSON file created at `.omb/sessions/<session_id>.json`
-- Schema passes all 6 validation rules
+- Schema passes all 6 validation rules (enforced by CLI)
 - Wave structure displayed to user
 - Session ID returned for pipeline activation
 - User asked whether to start pipeline via `omb:run`
@@ -115,168 +121,78 @@ Present the proposed pipeline as a table:
 
 Ask user if they want to modify. Repeat until confirmed.
 
-### 2A-4. Save as template (optional)
+### 2A-4. Build tasks JSON and initialize via CLI
+
+Convert the confirmed pipeline design into a JSON array where each task has:
+- `task_name` (string)
+- `task_type` (string: SKILL, SUB-AGENT, ASK_USER, SYSTEM_DECISION)
+- `task_payload` (string or null)
+- `checkpoint` (boolean)
+- `max_retries` (integer)
+- `depends_on_index` (list of integer indices referencing other tasks by position)
+
+Then run via Bash:
+
+```bash
+omb task init --manual --tasks-json '<tasks_json>' --name '<name>' --description '<desc>'
+```
+
+Extract `session_id` from the output. Then proceed to STEP 2D.
+
+### 2A-5. Save as template (optional)
 
 Ask via `AskUserQuestion`: "Save this pipeline as a reusable template in `.omb/schema/`?"
-- If yes: ask for a template name, slugify it, and save to `.omb/schema/<slugified-name>.json`
+- If yes: copy the session file to `.omb/schema/<slugified-name>.json` with `session_id` set to `"TEMPLATE"`
 - If no: proceed to STEP 3
-
-Then proceed to STEP 2C with the manually designed task list.
 
 ## STEP 2B — Pre-made Template Mode
 
-### 2B-1. Load schema template
+### 2B-1. Initialize pipeline via CLI
 
-Read the corresponding schema file from `.omb/schema/`:
+Run the shell script with the selected template:
 
-| Template | Schema File |
-|----------|------------|
-| Interview - Plan - Review - Execute - Verify - Document - Create PR | `.omb/schema/interview--plan-review-execute-verify-document-create-pr.json` |
-| ASK_USER - Plan - Review - Execute - Verify - Document - Create PR | `.omb/schema/ask-user--plan-review-execute-verify-document-create-pr.json` |
-| ASK_USER - Plan - Review | `.omb/schema/ask-user--plan-review.json` |
-| ASK_USER - Execute - Verify - Document - Create PR | `.omb/schema/ask-user--execute-verify-document-create-pr.json` |
-| ASK_USER - Review PR - Judge - Plan - Review - Execute - Verify - Document - Create PR | `.omb/schema/ask-user--review-pr-judge-plan-review-execute-verify-document-create-pr.json` |
-
-### 2B-2. Prepare for instantiation
-
-Read the schema JSON file. Then proceed to STEP 2C using the loaded task list.
-
-## STEP 2C — Build Pipeline State
-
-### 2C-1. Generate session_id
-
-Format: `YYYYmmddHHMM-XXXXXX`
-- `YYYYmmddHHMM` = current UTC datetime (e.g., `202604041523`)
-- `XXXXXX` = 6 random lowercase alphanumeric characters (`a-z`, `0-9`)
-- Example: `202604041523-x7k2mq`
-
-### 2C-2. Generate task_ids
-
-For each task in the loaded/designed template:
-1. Generate a unique `task_id`: 6 random lowercase alphanumeric characters (`a-z`, `0-9`)
-2. Ensure all task_ids are unique within the pipeline
-3. Re-wire `depends_on` references to use the newly generated task_ids
-
-### 2C-3. Build the full JSON
-
-Construct the PipelineState JSON:
-
-```json
-{
-  "session_id": "<generated session_id>",
-  "name": "<pipeline-name from args or template display name>",
-  "description": "<description from args or template description>",
-  "status": "active",
-  "user_id": null,
-  "claude_session_id": null,
-  "created_at": "<current UTC datetime in ISO 8601 format, e.g. 2026-04-04T15:23:00+00:00>",
-  "current_task": 0,
-  "notification": {
-    "on_step_complete": true,
-    "on_pipeline_complete": true,
-    "on_failure": true
-  },
-  "tasks": [...]
-}
+```bash
+omb task init "<template_name_or_alias>" --name "<name>" --description "<desc>"
 ```
 
-**[HARD]** Required fields:
-- `claude_session_id`: set to `null` (populated by session handler at runtime, used for fallback)
-- `created_at`: set to current UTC datetime in ISO 8601 format
-- Do NOT include `modified_at` field
-- Each task must have: `task_id` (6-char lowercase alphanumeric), `task_name`, `task_type`, `task_payload`, `status`, `result`, `iteration`, `checkpoint`, `max_retries`, `notification`, `depends_on`, `recovery_depth`
+**Examples:**
+```bash
+# Using alias
+omb task init fix --name "Fix login bug"
 
-**Task field reference:**
-| Field | Type | Description |
-|-------|------|-------------|
-| `task_id` | string | 6-char lowercase alphanumeric, auto-generated |
-| `task_name` | string | Name of the task (e.g., `ask-user`, `create-plan`, `judge`) |
-| `task_type` | enum | One of: `SKILL`, `SUB-AGENT`, `ASK_USER`, `USER_PROMPT`, `SYSTEM_DECISION` |
-| `task_payload` | string or null | Additional description/instructions for the task |
+# Using full display name
+omb task init "ASK_USER - Plan - Review" --name "Auth refactor"
 
-**[HARD]** Set `task_type` per the template: `"ASK_USER"` for `ask-user` tasks, `"SYSTEM_DECISION"` for `judge` tasks, `"SKILL"` for skill-mapped tasks. Set `checkpoint` and `max_retries` per the template. The `ask-user` task should have `task_payload` set to template-specific guidance text.
+# With description
+omb task init full --name "New feature" --description "Add user settings page"
+```
 
-<pipeline_templates>
+### 2B-2. Capture output
 
-### Interview - Plan - Review - Execute - Verify - Document - Create PR
-| Order | task_name | task_type | checkpoint | max_retries |
-|-------|-----------|-----------|-----------|-------------|
-| 0 | ask-user | ASK_USER | false | 0 |
-| 1 | interview | SKILL | false | 0 |
-| 2 | create-plan | SKILL | false | 0 |
-| 3 | review-plan | SKILL | false | 2 |
-| 4 | execute | SKILL | false | 0 |
-| 5 | verify | SKILL | false | 0 |
-| 6 | document | SKILL | false | 0 |
-| 7 | create-pr | SKILL | false | 0 |
+The CLI outputs:
+```
+session_id: 202604061523-x7k2mq
+name: Fix login bug
 
-### ASK_USER - Plan - Review - Execute - Verify - Document - Create PR
-| Order | task_name | task_type | checkpoint | max_retries |
-|-------|-----------|-----------|-----------|-------------|
-| 0 | ask-user | ASK_USER | false | 0 |
-| 1 | create-plan | SKILL | false | 0 |
-| 2 | review-plan | SKILL | false | 2 |
-| 3 | execute | SKILL | false | 0 |
-| 4 | verify | SKILL | false | 0 |
-| 5 | document | SKILL | false | 0 |
-| 6 | create-pr | SKILL | false | 0 |
+Wave 0: [ask-user]
+Wave 1: [create-plan]
+Wave 2: [review-plan]
+...
 
-### ASK_USER - Plan - Review
-| Order | task_name | task_type | checkpoint | max_retries |
-|-------|-----------|-----------|-----------|-------------|
-| 0 | ask-user | ASK_USER | false | 0 |
-| 1 | create-plan | SKILL | false | 0 |
-| 2 | review-plan | SKILL | false | 2 |
+Saved: .omb/sessions/202604061523-x7k2mq.json
+```
 
-### ASK_USER - Execute - Verify - Document - Create PR
-| Order | task_name | task_type | checkpoint | max_retries |
-|-------|-----------|-----------|-----------|-------------|
-| 0 | ask-user | ASK_USER | false | 0 |
-| 1 | execute | SKILL | false | 0 |
-| 2 | verify | SKILL | false | 0 |
-| 3 | document | SKILL | false | 0 |
-| 4 | create-pr | SKILL | false | 0 |
+Extract the `session_id` from the first line. If the CLI exits non-zero, report the error from stderr and stop.
 
-### ASK_USER - Review PR - Judge - Plan - Review - Execute - Verify - Document - Create PR
-| Order | task_name | task_type | checkpoint | max_retries |
-|-------|-----------|-----------|-----------|-------------|
-| 0 | ask-user | ASK_USER | false | 0 |
-| 1 | review-pr | SKILL | false | 0 |
-| 2 | judge | SYSTEM_DECISION | false | 0 |
-| 3 | create-plan | SKILL | false | 0 |
-| 4 | review-plan | SKILL | false | 2 |
-| 5 | execute | SKILL | false | 0 |
-| 6 | verify | SKILL | false | 0 |
-| 7 | document | SKILL | false | 0 |
-| 8 | create-pr | SKILL | false | 0 |
-
-</pipeline_templates>
-
-<system_decision_branching>
-### SYSTEM_DECISION: judge task behavior
-
-The `judge` task in the review-pr pipeline performs conditional branching:
-
-1. Read the result of the immediately preceding task (`review-pr`)
-2. **If `APPROVED`**: mark all subsequent tasks (create-plan through create-pr) as `SKIPPED`, set judge result to `APPROVED`
-3. **If `NEEDS_REVISION` or `REJECT`**: set judge result to `APPROVED` and let the pipeline continue normally to create-plan
-
-The `omb-run` skill handles SYSTEM_DECISION task execution by reading the previous task's result and applying skip logic.
-</system_decision_branching>
-
-### 2C-4. Wire depends_on (sequential linking)
-
-Each task depends on the previous task in the template order:
-- Task at order 0: `depends_on: []` (no dependencies)
-- Task at order N (N > 0): `depends_on: ["<task_id of task at order N-1>"]`
+Then proceed to STEP 2D.
 
 ## STEP 2D — Checkpoint Configuration
 
-After building the pipeline state, ask the user about checkpoint (Human Review) preferences.
+After the pipeline is initialized, ask the user about checkpoint (Human Review) preferences.
 
-### 2D-1. Collect SKILL task names
+### 2D-1. Identify SKILL tasks
 
-From the constructed pipeline JSON, extract all tasks where `task_type` is `"SKILL"`. These are the eligible checkpoint candidates. Exclude `ASK_USER` and `SYSTEM_DECISION` tasks.
+From the CLI output or by reading the session file, identify all tasks with `task_type: "SKILL"`. These are the eligible checkpoint candidates. Exclude `ASK_USER` and `SYSTEM_DECISION` tasks.
 
 ### 2D-2. Ask checkpoint preference
 
@@ -291,102 +207,50 @@ Options (numbered list):
 
 The user may select one or multiple step names (comma-separated).
 
-### 2D-3. Apply checkpoint settings
+### 2D-3. Apply checkpoint settings via CLI
 
 - If the user selects **"모두 자동으로 진행"** (option 1):
-  - Verify all tasks have `checkpoint: false` (they should be by default)
-  - Proceed to STEP 3
+  - No action needed. Proceed to STEP 3.
 
 - If the user selects specific step(s):
-  - For each selected task_name, set `checkpoint: true` in the pipeline JSON
-  - Display the updated checkpoint configuration:
+  - Run via Bash:
+    ```bash
+    omb task checkpoint <session_id> --tasks "review-plan,verify"
     ```
-    Checkpoint enabled: review-plan, verify
-    Auto-advance: interview, create-plan, execute, document, create-pr
-    ```
-  - Proceed to STEP 3
+  - Display the CLI output confirming checkpoint configuration.
+  - Proceed to STEP 3.
 
-## STEP 3 — Validate Schema
+## STEP 3 — Verification (CLI-handled)
 
-Apply all 6 validation rules to the constructed JSON. Collect ALL errors before reporting.
-
-<validation_rules>
-
-### Rule 1: Structural validation
-Every required field must be present with the correct type:
-- `session_id`: string
-- `name`: string
-- `status`: one of `active`, `completed`, `stalled`, `cancelled`
-- `claude_session_id`: string or null
-- `created_at`: valid ISO 8601 datetime string
-- Each task must have: `task_id` (string), `task_name` (string), `task_type` (one of `SKILL`, `SUB-AGENT`, `USER_PROMPT`, `ASK_USER`, `SYSTEM_DECISION`), `status` (one of `pending`, `active`, `done`, `failed`, `skipped`), `depends_on` (list of strings)
-
-### Rule 2: task_id uniqueness
-No two tasks may share the same `task_id`.
-
-### Rule 3: depends_on references must exist
-Every `task_id` referenced in any task's `depends_on` must be a `task_id` of another task in the pipeline.
-
-### Rule 4: No self-referential depends_on
-A task's `depends_on` must not contain its own `task_id`.
-
-### Rule 5: No circular dependencies
-Apply Kahn's topological sort (see Step 4). If any tasks remain unvisited after the algorithm completes, a circular dependency exists.
-
-### Rule 6: SKILL task_name must exist in TASK_SKILL_MAP
-Every task with `task_type: "SKILL"` must have a `task_name` that maps to a known skill:
-
-| task_name | skill |
-|-----------|-------|
-| interview | omb-interview |
-| create-plan | omb-create-plan |
-| review-plan | omb-review-plan |
-| execute | omb-execute |
-| verify | omb-verify |
-| document | omb-document |
-| create-pr | omb-create-pr |
-| review-pr | omb-review-pr |
-| commit-to-pr | omb-commit-to-pr |
-
-</validation_rules>
-
-If validation fails, automatically fix the errors (e.g., regenerate duplicate task_ids, repair broken depends_on references) and re-validate. Only prompt the user if the errors cannot be automatically corrected.
-
-## STEP 4 — Compute and Display Waves
-
-Perform Kahn's topological sort to group tasks into waves:
-
-1. For each task, count how many `depends_on` entries it has (its **in-degree**).
-2. Start with all tasks that have in-degree 0 — these form **Wave 0**.
-3. Remove Wave 0 tasks from the graph: for each task that depended on a Wave 0 task, decrement its in-degree.
-4. All tasks now with in-degree 0 form **Wave 1**.
-5. Repeat until all tasks are assigned to waves.
-6. If any tasks remain with in-degree > 0 after the algorithm completes, report a circular dependency error.
-
-Display the wave structure:
-```
-Wave 0: [task_name_1]
-Wave 1: [task_name_2]
-Wave 2: [task_name_3, task_name_4]
-...
-```
-
-## STEP 5 — Save Session
+Validation, wave computation, and save are all performed by `omb task init`. This step only applies if you need to verify an existing session:
 
 ```bash
-mkdir -p .omb/sessions
+# Re-read the session to confirm it's valid
+omb progress <session_id>
 ```
 
-Then use the `Write` tool to save the JSON to `.omb/sessions/<session_id>.json`.
+If the CLI reported errors during STEP 2B or 2A-4, fix the input and re-run. Do NOT manually construct JSON.
 
-## STEP 6 — Report and Transition
+## STEP 4 — Report and Transition
 
 Display:
 - Session ID
 - Pipeline name and description
-- Wave structure (from Step 4)
+- Wave structure (from CLI output in STEP 2B)
 - First task to execute
 - SYSTEM_DECISION branching info (if review-pr pipeline)
+
+<system_decision_branching>
+### SYSTEM_DECISION: judge task behavior
+
+The `judge` task in the review-pr pipeline performs conditional branching:
+
+1. Read the result of the immediately preceding task (`review-pr`)
+2. **If `APPROVED`**: mark all subsequent tasks (create-plan through create-pr) as `SKIPPED`, set judge result to `APPROVED`
+3. **If `NEEDS_REVISION` or `REJECT`**: set judge result to `APPROVED` and let the pipeline continue normally to create-plan
+
+The `omb-run` skill handles SYSTEM_DECISION task execution by reading the previous task's result and applying skip logic.
+</system_decision_branching>
 
 Then ask the user via `AskUserQuestion`:
 - "Start pipeline now? (recommended: --worktree mode for isolated execution)"
@@ -406,3 +270,63 @@ If the user selects **No**: display both run commands for later use:
 State "DONE" with session_id and pipeline summary.
 
 **[HARD] STOP AFTER REPORTING OR AFTER omb-run INVOCATION**
+
+---
+
+## Pipeline Templates Reference
+
+<pipeline_templates>
+
+### Interview - Plan - Review - Execute - Verify - Document - Create PR
+| Order | task_name | task_type | checkpoint | max_retries |
+|-------|-----------|-----------|-----------|-------------|
+| 0 | ask-user | ASK_USER | false | 0 |
+| 1 | interview | SKILL | false | 0 |
+| 2 | create-plan | SKILL | false | 0 |
+| 3 | review-plan | SKILL | true | 2 |
+| 4 | execute | SKILL | false | 0 |
+| 5 | verify | SKILL | false | 0 |
+| 6 | document | SKILL | false | 0 |
+| 7 | create-pr | SKILL | false | 0 |
+
+### ASK_USER - Plan - Review - Execute - Verify - Document - Create PR
+| Order | task_name | task_type | checkpoint | max_retries |
+|-------|-----------|-----------|-----------|-------------|
+| 0 | ask-user | ASK_USER | false | 0 |
+| 1 | create-plan | SKILL | false | 0 |
+| 2 | review-plan | SKILL | true | 2 |
+| 3 | execute | SKILL | false | 0 |
+| 4 | verify | SKILL | false | 0 |
+| 5 | document | SKILL | false | 0 |
+| 6 | create-pr | SKILL | false | 0 |
+
+### ASK_USER - Plan - Review
+| Order | task_name | task_type | checkpoint | max_retries |
+|-------|-----------|-----------|-----------|-------------|
+| 0 | ask-user | ASK_USER | false | 0 |
+| 1 | create-plan | SKILL | false | 0 |
+| 2 | review-plan | SKILL | true | 2 |
+
+### ASK_USER - Execute - Verify - Document - Create PR
+| Order | task_name | task_type | checkpoint | max_retries |
+|-------|-----------|-----------|-----------|-------------|
+| 0 | ask-user | ASK_USER | false | 0 |
+| 1 | execute | SKILL | false | 0 |
+| 2 | verify | SKILL | false | 0 |
+| 3 | document | SKILL | false | 0 |
+| 4 | create-pr | SKILL | false | 0 |
+
+### ASK_USER - Review PR - Judge - Plan - Review - Execute - Verify - Document - Create PR
+| Order | task_name | task_type | checkpoint | max_retries |
+|-------|-----------|-----------|-----------|-------------|
+| 0 | ask-user | ASK_USER | false | 0 |
+| 1 | review-pr | SKILL | false | 0 |
+| 2 | judge | SYSTEM_DECISION | false | 0 |
+| 3 | create-plan | SKILL | false | 0 |
+| 4 | review-plan | SKILL | true | 2 |
+| 5 | execute | SKILL | false | 0 |
+| 6 | verify | SKILL | false | 0 |
+| 7 | document | SKILL | false | 0 |
+| 8 | create-pr | SKILL | false | 0 |
+
+</pipeline_templates>

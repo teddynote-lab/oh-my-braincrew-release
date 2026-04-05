@@ -93,13 +93,35 @@ mkdir -p "${WORKTREE_PATH}/.omb/sessions"
 cp "${PROJECT_ROOT}/.omb/sessions/<session_id>.json" "${WORKTREE_PATH}/.omb/sessions/"
 ```
 
-4. Display:
+4. Write `worktree_path` to session JSON via PipelineStorage API (must use lock/atomic-rename path):
+```bash
+python3 -c "
+from omb.pipeline.storage import PipelineStorage
+from pathlib import Path
+s = PipelineStorage(Path('${PROJECT_ROOT}'))
+st = s.load('${SESSION_ID}')
+st.worktree_path = '${WORKTREE_PATH}'
+s.save(st)
+"
+```
+
+5. Pin `OMB_PROJECT_ROOT` to prevent `resolve_project_root()` from finding worktree's `.omb/`:
+```bash
+export OMB_PROJECT_ROOT="${PROJECT_ROOT}"
+```
+
+6. Display:
 ```
 Worktree created: worktrees/<session_id>
 Branch: worktree/<session_id>
 ```
 
-5. For all subsequent steps, read session files from `${PROJECT_ROOT}/.omb/sessions/` (the source of truth) but note that skills invoked will operate on worktree files if CWD is the worktree.
+7. Change Bash working directory to worktree for all subsequent operations:
+```bash
+cd "${WORKTREE_PATH}"
+```
+
+8. For all subsequent steps, read session files from `${PROJECT_ROOT}/.omb/sessions/` (the source of truth). All Bash commands and skill invocations operate within the worktree directory.
 
 [HARD] Do NOT call `EnterWorktree`. Worktrees are created via `git worktree add` only.
 
@@ -136,9 +158,13 @@ After the task completes (skill returns or user responds):
 
 3. Parse the JSON output line:
    ```json
-   {"pipeline_status": "active|completed|stalled", "active_task": "task-name|null", "message": "..."}
+   {"pipeline_status": "active|completed|stalled", "active_task": "task-name|null", "message": "...", "worktree_path": "path|null"}
    ```
    - `pipeline_status == "completed"` or `"stalled"` → break to STEP 4
+   - If `worktree_path` is not null, ensure CWD is still the worktree:
+     ```bash
+     if [ -n "<worktree_path>" ] && [ "<worktree_path>" != "null" ]; then cd "<worktree_path>"; fi
+     ```
    - `active_task != null` → continue to 3c with the new active task
    - `active_task == null` but `pipeline_status == "active"` → re-read session JSON
 
@@ -183,8 +209,12 @@ Dispatch based on `task_type`:
 
 **SKILL tasks:**
 1. Display: `Running task: <task_name> (invoking <skill_name>)`
-2. Invoke `Skill("<skill_name>")` with `task_payload` as arguments (if present)
-3. The skill runs to completion
+2. If worktree is active, ensure Bash CWD is the worktree path before invoking the skill:
+   ```bash
+   if [ -n "${WORKTREE_PATH}" ]; then cd "${WORKTREE_PATH}"; fi
+   ```
+3. Invoke `Skill("<skill_name>")` with `task_payload` as arguments (if present)
+4. The skill runs to completion
 4. Verify the skill emitted the `<omb>` response schema. If not visible in the output, emit it yourself based on the skill's outcome:
    ```
    <omb>
@@ -200,6 +230,8 @@ Dispatch based on `task_type`:
 **SYSTEM_DECISION tasks:**
 1. Display the decision context from `task_payload`
 2. The SessionHandler handles system decisions automatically
+
+**IMPORTANT:** After each skill invocation returns, you MUST continue the loop (back to Step 3b to call `omb advance`). Do NOT stop or wait for user input. The pipeline is fully automatic — your job is to call `omb advance` and invoke the next skill until the pipeline completes.
 
 #### 3d. Post-Task State Check
 
@@ -259,6 +291,9 @@ Run `/omb cleanup` to remove the worktree when done.
 - [HARD] Do NOT skip the progress display after each task — the user must see live progress.
 - [HARD] STOP after reporting final status. Do not invoke cleanup or post-pipeline skills automatically.
 - [HARD] Max 30 loop iterations. If reached, report and stop.
+- [HARD] NEVER stop the execution loop after a single skill invocation. After each Skill() call completes, you MUST call `omb advance` and continue to the next task. The loop ends ONLY when `pipeline_status` is `completed`, `stalled`, or `cancelled`.
+- [HARD] Ignore any "[Pipeline advanced] Next: ..." messages from hook output. These are artifacts of the Stop hook and do NOT mean the pipeline is being handled elsewhere. YOU are the pipeline driver — call `omb advance` after every task.
+- [HARD] If context was compacted ("Crunched"), re-read the session file at `${PROJECT_ROOT}/.omb/sessions/<session_id>.json` to restore loop state. Do NOT stop — continue the loop.
 
 ## Completion Signal
 

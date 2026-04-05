@@ -205,6 +205,25 @@ If user selects "Skip Slack" at any point → proceed to Phase 3.
 
 ### Step 2.3: Write Credentials
 
+Write to **both** locations (primary for notification service, legacy for channel bridge):
+
+**Primary** (`~/.config/omb/slack.env` — read by `notification.py`):
+```bash
+mkdir -p ~/.config/omb/
+```
+
+Write `~/.config/omb/slack.env`:
+```
+SLACK_BOT_TOKEN={{bot_token}}
+SLACK_SIGNING_SECRET={{signing_secret}}
+SLACK_CHANNEL_ID={{channel_id}}
+```
+
+```bash
+chmod 0600 ~/.config/omb/slack.env
+```
+
+**Legacy** (`~/.claude/channels/slack/.env` — read by channel bridge):
 ```bash
 mkdir -p ~/.claude/channels/slack/
 ```
@@ -216,10 +235,17 @@ SLACK_SIGNING_SECRET={{signing_secret}}
 SLACK_CHANNEL_ID={{channel_id}}
 ```
 
-Set permissions:
 ```bash
 chmod 0600 ~/.claude/channels/slack/.env
 ```
+
+### Step 2.4: Flip Config Flag
+
+Set `slack.enabled = true` in `.omb/config.json` so the pipeline knows notifications are active.
+
+Read `.omb/config.json`, parse JSON, set `slack.enabled` to `true`, write back.
+
+If `.omb/config.json` does not exist (setup running before project init), skip this step — the flag will be set when `omb init` runs.
 
 Store `slack_configured = true` for summary.
 
@@ -248,6 +274,17 @@ If mode is UPDATE:
 - Check for `<!-- omb:init-project` version marker
 - Store existing content for merge in Phase 5
 
+### Step 3.1.5: Gitignore Auto-Update (Silent)
+
+Ensure the project's `.gitignore` covers harness and language-specific artifacts.
+No user interaction — this is a silent housekeeping step.
+
+1. Read `.gitignore` if it exists (create if missing)
+2. Always add **harness entries** and **common entries**: see @reference.md Section 12
+3. Skip language-specific entries for now (scan hasn't run yet) — those are added in Step 3.2.5
+4. Use idempotent append: check each entry exists before adding (no duplicates)
+5. Track additions in `scan_results.gitignore_updates[]` for Phase 7 summary display
+
 ### Step 3.2: Concurrent Scan
 
 Invoke the `Agent` tool twice with `subagent_type: "explore"` and `model: "haiku"` — issue both calls in a single parallel batch. Use the prompts from @reference.md Section 5.
@@ -260,9 +297,17 @@ Agent 2: Structure Scanner
 - Output: repo type, directories, entry points, project identity, workspaces
 ```
 
-Both agents MUST complete before proceeding to Phase 4.
+Both agents MUST complete before proceeding to Step 3.2.5.
 
 Collect and merge results into a `scan_results` object.
+
+### Step 3.2.5: Language-Specific Gitignore Entries (Silent)
+
+After scan completes, add language-specific `.gitignore` entries based on detected languages.
+
+1. From `scan_results.languages`, look up language-specific entries in @reference.md Section 12
+2. Use idempotent append (check before adding — no duplicates)
+3. Append additions to `scan_results.gitignore_updates[]`
 
 ---
 
@@ -421,6 +466,7 @@ Show combined summary:
 | **Project** | |
 | CLAUDE.md | {{created / updated}} ({{line_count}} lines) |
 | PROJECT.md | {{created / updated}} ({{line_count}} lines) |
+| **.gitignore** | {{Added N entries / Already complete}} |
 | **Community** | |
 | Discussion | {{posted / skipped}} |
 | Star | {{yes / no}} |

@@ -1,8 +1,6 @@
 {
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "TRACE_TO_LANGSMITH": "true",
-    "CC_LANGSMITH_PROJECT": "oh-my-braincrew"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "hooks": {
     "SessionStart": [
@@ -237,7 +235,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": ".omb/status_line.sh"
+    "command": "\"$CLAUDE_PROJECT_DIR/.omb/status_line.sh\""
   },
   "permissions": {
     "allow": [

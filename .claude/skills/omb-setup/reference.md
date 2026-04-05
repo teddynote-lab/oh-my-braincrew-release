@@ -704,3 +704,40 @@ You are not logged into any GitHub hosts. Run gh auth login to authenticate.
 
 **Username extraction (optional):**
 Parse "Logged in to github.com account {{username}}" to pre-fill Step 2.
+
+---
+
+## Section 12: Gitignore Required Entries
+
+Step 3.1.5 uses these tables to ensure `.gitignore` coverage. All additions are idempotent — check before appending.
+
+### Harness Entries (always added)
+
+These entries are required for any project using oh-my-braincrew:
+
+| Entry | Reason |
+|---|---|
+| `.omb/` | Harness runtime state, plans, sessions, logs |
+| `.claude/plans/` | Claude Code plan files (session-local) |
+| `.claude/agent-memory/` | Agent memory state |
+| `.claude/worktrees/` | Agent worktree checkouts |
+| `.claude/skills/*-workspace/` | Skill iteration/eval artifacts |
+
+### Language-Specific Entries (added when detected)
+
+Added based on languages/frameworks found during Phase 3 scan:
+
+| Detected Language | Entries |
+|---|---|
+| Python | `__pycache__/`, `*.pyc`, `.venv/`, `dist/`, `*.egg-info/`, `.ruff_cache/`, `.pytest_cache/`, `.coverage` |
+| TypeScript / JavaScript | `node_modules/`, `dist/`, `coverage/` |
+| Go | `bin/`, `*.exe`, `coverage.out` |
+
+### Common Entries (always added)
+
+| Entry | Reason |
+|---|---|
+| `.env` | Environment secrets |
+| `.env.local` | Local environment overrides |
+| `.env*.local` | Variant local env files |
+| `.DS_Store` | macOS Finder metadata |
