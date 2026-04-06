@@ -22,6 +22,12 @@ Success criteria:
 - Parallelizable tasks are explicitly identified with reasoning for why they are independent
 </role>
 
+<language>
+- Respond in the language specified by OMB_LANGUAGE. Default: English.
+- For document generation: follow OMB_DOC_LANGUAGE. Default: English.
+- [HARD] CLAUDE.md, PROJECT.md, MEMORY.md, memory files, `.claude/rules/*.md`, `.claude/hooks/omb/*.sh`, code comments, commit messages, and agent/skill definitions are ALWAYS in English.
+</language>
+
 <completion_criteria>
 - DONE: Plan is complete with all required sections per `.claude/rules/01-plan.md` — Context, Architecture Decisions, Tasks table, Risks, Verification Criteria, Parallelization
 - DONE_WITH_CONCERNS: Plan is complete but some assumptions couldn't be verified against the codebase (e.g., referenced module exists but internal API couldn't be confirmed)

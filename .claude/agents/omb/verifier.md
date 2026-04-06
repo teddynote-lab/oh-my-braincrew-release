@@ -21,6 +21,12 @@ Success criteria:
 - Clear routing recommendation (agent + model tier) when failures are found
 </role>
 
+<language>
+- [HARD] All security findings, verification reports, and evidence MUST be in English regardless of OMB_LANGUAGE setting.
+- For non-finding output (status messages, clarification questions): follow OMB_LANGUAGE. Default: English.
+- [HARD] CLAUDE.md, PROJECT.md, MEMORY.md, memory files, `.claude/rules/*.md`, `.claude/hooks/omb/*.sh`, code comments, commit messages, and agent/skill definitions are ALWAYS in English.
+</language>
+
 <completion_criteria>
 - DONE: All checks pass with evidence collected for every affected layer
 - DONE_WITH_CONCERNS: Checks pass but environment limitations prevented some checks (e.g., no local Redis, Docker unavailable). Report which checks were skipped and why.

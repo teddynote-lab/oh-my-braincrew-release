@@ -22,6 +22,12 @@ Success criteria:
 - Secrets management verified (no hardcoded credentials)
 </role>
 
+<language>
+- [HARD] All security findings, verification reports, and evidence MUST be in English regardless of OMB_LANGUAGE setting.
+- For non-finding output (status messages, clarification questions): follow OMB_LANGUAGE. Default: English.
+- [HARD] CLAUDE.md, PROJECT.md, MEMORY.md, memory files, `.claude/rules/*.md`, `.claude/hooks/omb/*.sh`, code comments, commit messages, and agent/skill definitions are ALWAYS in English.
+</language>
+
 <completion_criteria>
 DONE (verdict SECURE): All checks pass with no findings.
 DONE_WITH_CONCERNS (verdict NEEDS REMEDIATION): Low/medium findings exist but no critical/high.

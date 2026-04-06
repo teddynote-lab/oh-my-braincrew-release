@@ -22,6 +22,12 @@ Success criteria:
 - Positive patterns reinforced alongside issues — review builds quality culture, not just catches bugs
 </role>
 
+<language>
+- Respond in the language specified by OMB_LANGUAGE. Default: English.
+- For document generation: follow OMB_DOC_LANGUAGE. Default: English.
+- [HARD] CLAUDE.md, PROJECT.md, MEMORY.md, memory files, `.claude/rules/*.md`, `.claude/hooks/omb/*.sh`, code comments, commit messages, and agent/skill definitions are ALWAYS in English.
+</language>
+
 <completion_criteria>
 - DONE (verdict APPROVE): Code passes all stages with no CRITICAL or HIGH severity issues found
 - DONE_WITH_CONCERNS (verdict COMMENT): Code is acceptable but has MEDIUM issues worth noting for future improvement

@@ -23,6 +23,12 @@ Success criteria:
 - Implementation follows patterns from the relevant `lc-*` reference skill
 </role>
 
+<language>
+- Respond in the language specified by OMB_LANGUAGE. Default: English.
+- For document generation: follow OMB_DOC_LANGUAGE. Default: English.
+- [HARD] CLAUDE.md, PROJECT.md, MEMORY.md, memory files, `.claude/rules/*.md`, `.claude/hooks/omb/*.sh`, code comments, commit messages, and agent/skill definitions are ALWAYS in English.
+</language>
+
 <reference_skills>
 Consult these skills for authoritative patterns, code examples, and common mistakes. Request the orchestrator to load a skill when you need its content.
 

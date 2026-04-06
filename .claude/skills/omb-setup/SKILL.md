@@ -64,7 +64,7 @@ If `profile_exists` is true AND `--force` is NOT set:
 
 ```
 AskUserQuestion:
-  question: "Found existing omb profile:\n\n  Username: {{username}}\n  Notes: {{notes_preview}}\n  Community: {{community_status}}\n\nWhat would you like to do?"
+  question: "Found existing omb profile:\n\n  Username: {{username}}\n  Language: {{language | default: 'en'}}\n  Doc Language: {{doc_language | default: 'en'}}\n  Notes: {{notes_preview}}\n  Community: {{community_status}}\n\nWhat would you like to do?"
   header: "Profile"
   options:
     - label: "Keep current"
@@ -76,7 +76,7 @@ AskUserQuestion:
 ```
 
 - If "Keep current" → skip to Phase 2 (Slack Configuration)
-- If "Update" → proceed with pre-filled values
+- If "Update" → show Steps 1.2, 1.2b, and 1.2c with existing values pre-selected as defaults
 - If "Start fresh" → clear existing data, proceed as new
 
 If `profile_exists` is false OR `--force` is set → proceed directly to Step 1.2.
@@ -100,6 +100,45 @@ Detect defaults:
 - Korean usernames are supported
 
 Store as `username`.
+
+### Step 1.2b: Default Language
+
+```
+AskUserQuestion:
+  question: "Select your preferred interaction language.\nThis controls how Claude responds to you during pipeline execution."
+  header: "Language"
+  options:
+    - label: "English (Recommended)"
+      description: "All interaction in English"
+    - label: "한국어 (Korean)"
+      description: "한국어로 대화합니다"
+```
+
+Store as `language`. Map: "English (Recommended)" → `en`, "한국어 (Korean)" → `ko`.
+[HARD] Validate: value must be exactly `"en"` or `"ko"` before writing anywhere.
+
+### Step 1.2c: Document Language
+
+```
+AskUserQuestion:
+  question: "Select the language for generated documents.\nThis applies to plans (.omb/plans/), documents, and README.md.\n\n⚠️ Note: CLAUDE.md, PROJECT.md, and MEMORY.md are ALWAYS written in English regardless of this setting."
+  header: "Doc Language"
+  options:
+    - label: "English (Recommended)"
+      description: "All documents in English — best for open-source and international teams"
+    - label: "한국어 (Korean)"
+      description: "Plans, documents, README in Korean"
+```
+
+Store as `doc_language`. Map: "English (Recommended)" → `en`, "한국어 (Korean)" → `ko`.
+[HARD] Validate: value must be exactly `"en"` or `"ko"` before writing anywhere.
+
+### Step 1.2d: Write Language Settings to .claude/settings.json
+
+After collecting both language preferences, update `.claude/settings.json` env object.
+Use the Edit tool to add `OMB_LANGUAGE` and `OMB_DOC_LANGUAGE` to the existing `env` object.
+[HARD] Preserve all existing env vars — do NOT overwrite the env object, only add/update keys.
+[HARD] If `.claude/settings.json` does not exist, create it with the default structure.
 
 ### Step 1.3: Important Notes
 
@@ -126,6 +165,8 @@ Write `~/.omb/profile.json` using the schema from @reference.md Section 1.
 ```json
 {
   "username": "{{username}}",
+  "language": "{{language}}",
+  "doc_language": "{{doc_language}}",
   "notes": "{{notes}}",
   "community_joined": false,
   "repo_starred": false,
@@ -134,9 +175,15 @@ Write `~/.omb/profile.json` using the schema from @reference.md Section 1.
 }
 ```
 
-For updates: preserve `created_at`, update `updated_at`, keep existing `community_joined`/`repo_starred` values.
+For updates: preserve `created_at`, update `updated_at`, keep existing `community_joined`/`repo_starred`/`language`/`doc_language` values.
 
 Verify the write by reading back the file.
+
+### Step 1.5: Language Activation Notice
+
+Display to user:
+> ⚠️ Language settings (OMB_LANGUAGE={{language}}, OMB_DOC_LANGUAGE={{doc_language}}) have been saved to `.claude/settings.json`.
+> These settings take effect on the **next session start**. Restart Claude Code to apply.
 
 ---
 

@@ -22,6 +22,12 @@ Success criteria:
 - Verdict is clear and actionable — APPROVED, NEEDS REVISION, or BLOCKED with specific next steps
 </role>
 
+<language>
+- Respond in the language specified by OMB_LANGUAGE. Default: English.
+- For document generation: follow OMB_DOC_LANGUAGE. Default: English.
+- [HARD] CLAUDE.md, PROJECT.md, MEMORY.md, memory files, `.claude/rules/*.md`, `.claude/hooks/omb/*.sh`, code comments, commit messages, and agent/skill definitions are ALWAYS in English.
+</language>
+
 <completion_criteria>
 - DONE (verdict APPROVED): Plan passes all checks with evidence — assumptions confirmed, dependencies correct, risks addressed
 - DONE_WITH_CONCERNS (verdict APPROVED with warnings): Plan is fundamentally sound but has non-blocking issues that should be tracked during execution

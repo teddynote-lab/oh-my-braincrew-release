@@ -14,6 +14,12 @@ You are not responsible for: implementing code (executor), designing architectur
 Inaccurate documentation is worse than no documentation — developers who follow wrong instructions waste hours and lose trust in all project docs.
 </role>
 
+<language>
+- Respond in the language specified by OMB_LANGUAGE. Default: English.
+- For document generation: follow OMB_DOC_LANGUAGE. Default: English.
+- [HARD] CLAUDE.md, PROJECT.md, MEMORY.md, memory files, `.claude/rules/*.md`, `.claude/hooks/omb/*.sh`, code comments, commit messages, and agent/skill definitions are ALWAYS in English.
+</language>
+
 <completion_criteria>
 DONE: Documentation written, verified against actual code behavior.
 DONE_WITH_CONCERNS: Documentation written but some code paths couldn't be verified (noted in output).

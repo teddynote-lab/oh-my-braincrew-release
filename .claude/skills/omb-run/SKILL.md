@@ -69,59 +69,54 @@ Status: active
 Tasks: <total> total, <done> done, <pending> pending
 ```
 
+5. Set driver flag to prevent Stop hook from advancing pipeline state:
+```bash
+python3 -c "
+import json
+path = '${PROJECT_ROOT}/.omb/sessions/<session_id>.json'
+with open(path) as f:
+    data = json.load(f)
+data['driver'] = 'omb-run'
+with open(path, 'w') as f:
+    json.dump(data, f, indent=2)
+print('driver set to omb-run')
+"
+```
+
+[HARD] This MUST run before the main execution loop. Without it, the Stop hook will double-advance and skip tasks.
+
 ## STEP 2 — Worktree Setup (conditional)
 
 **Skip this step** if `--worktree` was NOT provided.
 
 If `--worktree` was provided:
 
-1. Create worktree using the `<session_id>` from STEP 0. If no `<session_id>` was provided, generate one using the same format (`YYYYmmddHHMM-XXXXXX`):
+1. Run the worktree setup script:
 ```bash
-# WT_ID is the <session_id> parsed in STEP 0
-# If no session_id, generate: $(date -u +%Y%m%d%H%M)-$(cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | head -c 6)
-WT_ID="<session_id>"
 PROJECT_ROOT=$(git rev-parse --show-toplevel)
-git worktree add -b "worktree/${WT_ID}" "${PROJECT_ROOT}/worktrees/${WT_ID}"
-echo "WORKTREE_PATH=${PROJECT_ROOT}/worktrees/${WT_ID}"
+WORKTREE_OUTPUT=$(bash "${PROJECT_ROOT}/.claude/skills/omb-run/scripts/setup-worktree.sh" "<session_id>" "${PROJECT_ROOT}" 2>&1)
+WORKTREE_PATH=$(echo "$WORKTREE_OUTPUT" | grep "^WORKTREE_PATH=" | cut -d= -f2-)
 ```
 
-2. Store `WORKTREE_PATH` for subsequent operations.
+2. If the script exits non-zero, report the error and stop.
 
-3. Ensure `.omb/sessions/` directory exists in worktree or is accessible:
-```bash
-mkdir -p "${WORKTREE_PATH}/.omb/sessions"
-cp "${PROJECT_ROOT}/.omb/sessions/<session_id>.json" "${WORKTREE_PATH}/.omb/sessions/"
-```
-
-4. Write `worktree_path` to session JSON via PipelineStorage API (must use lock/atomic-rename path):
-```bash
-python3 -c "
-from omb.pipeline.storage import PipelineStorage
-from pathlib import Path
-s = PipelineStorage(Path('${PROJECT_ROOT}'))
-st = s.load('${SESSION_ID}')
-st.worktree_path = '${WORKTREE_PATH}'
-s.save(st)
-"
-```
-
-5. Pin `OMB_PROJECT_ROOT` to prevent `resolve_project_root()` from finding worktree's `.omb/`:
+3. Pin `OMB_PROJECT_ROOT` to prevent `resolve_project_root()` from finding worktree's `.omb/`:
 ```bash
 export OMB_PROJECT_ROOT="${PROJECT_ROOT}"
 ```
 
-6. Display:
+4. Display:
 ```
 Worktree created: worktrees/<session_id>
 Branch: worktree/<session_id>
 ```
 
-7. Change Bash working directory to worktree for all subsequent operations:
+5. Change Bash working directory to worktree for all subsequent operations:
 ```bash
 cd "${WORKTREE_PATH}"
 ```
 
-8. For all subsequent steps, read session files from `${PROJECT_ROOT}/.omb/sessions/` (the source of truth). All Bash commands and skill invocations operate within the worktree directory.
+6. For all subsequent steps, read session files from `${PROJECT_ROOT}/.omb/sessions/` (the source of truth). All Bash commands and skill invocations operate within the worktree directory.
 
 [HARD] Do NOT call `EnterWorktree`. Worktrees are created via `git worktree add` only.
 
@@ -259,6 +254,20 @@ Increment `LOOP_COUNT`.
 - Otherwise: continue loop from 3a
 
 ## STEP 4 — Report Final Status
+
+Clear driver flag so standalone skills can advance normally:
+```bash
+python3 -c "
+import json
+path = '${PROJECT_ROOT}/.omb/sessions/<session_id>.json'
+with open(path) as f:
+    data = json.load(f)
+data['driver'] = None
+with open(path, 'w') as f:
+    json.dump(data, f, indent=2)
+print('driver cleared')
+"
+```
 
 Display the final pipeline report:
 

@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.11] - 2026-04-06
+
+### Added
+- Language settings support in setup wizard with i18n propagation across agents and skills
+
+### Fixed
+- Session advancement stability with driver guard preventing double-advance
+- Worktree setup reliability using CLI commands instead of inline scripts
+
+### Improved
+- Agent localization now correctly references language settings
+
 ## [0.2.10] - 2026-04-06
 
 ### Added

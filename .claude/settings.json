@@ -1,6 +1,8 @@
 {
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "OMB_LANGUAGE": "en",
+    "OMB_DOC_LANGUAGE": "en"
   },
   "hooks": {
     "SessionStart": [

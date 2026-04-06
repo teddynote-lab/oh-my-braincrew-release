@@ -11,6 +11,8 @@ Reference material for the `omb-setup` skill. Merges content from `omb-init-surv
 ```json
 {
   "username": "string — required, user's display name or GitHub username",
+  "language": "string — required, default: 'en', values: 'en' | 'ko'",
+  "doc_language": "string — required, default: 'en', values: 'en' | 'ko'",
   "notes": "string — optional, free-text project conventions/preferences for init-project injection",
   "community_joined": "boolean — true if user posted to GitHub Discussions",
   "repo_starred": "boolean — true if user starred the repo via gh api",
@@ -19,12 +21,22 @@ Reference material for the `omb-setup` skill. Merges content from `omb-init-surv
 }
 ```
 
+### Language Field Reference
+| Field | Values | Default | Effect |
+|-------|--------|---------|--------|
+| `language` | `en`, `ko` | `en` | Controls Claude's interaction language (responses, AskUserQuestion prompts). Primary signal — agents follow this. |
+| `doc_language` | `en`, `ko` | `en` | Controls language for plans, documents, README.md. Does NOT affect CLAUDE.md, PROJECT.md, MEMORY.md (always English). |
+
+**Backward compatibility:** Profiles without these fields default to `en` for both.
+
 **Example:**
 ```json
 {
   "username": "teddy",
   "notes": "I prefer Python for backend with strict type hints. All projects use pytest + vitest. Redis for caching, Postgres for persistence.",
   "community_joined": true,
+  "language": "ko",
+  "doc_language": "en",
   "repo_starred": true,
   "created_at": "2026-03-24T09:00:00Z",
   "updated_at": "2026-03-24T09:05:00Z"

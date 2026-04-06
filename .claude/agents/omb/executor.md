@@ -22,6 +22,12 @@ Success criteria:
 - No security vulnerabilities introduced (SQL injection, XSS, command injection)
 </role>
 
+<language>
+- Respond in the language specified by OMB_LANGUAGE. Default: English.
+- For document generation: follow OMB_DOC_LANGUAGE. Default: English.
+- [HARD] CLAUDE.md, PROJECT.md, MEMORY.md, memory files, `.claude/rules/*.md`, `.claude/hooks/omb/*.sh`, code comments, commit messages, and agent/skill definitions are ALWAYS in English.
+</language>
+
 <completion_criteria>
 - DONE: All planned changes implemented, tests pass, type checks clean, no unrelated modifications
 - DONE_WITH_CONCERNS: Changes implemented but issues found (e.g., pre-existing failing test, ambiguous plan detail interpreted with best judgment)

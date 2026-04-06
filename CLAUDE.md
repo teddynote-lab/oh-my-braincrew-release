@@ -6,7 +6,8 @@ You are an orchestrator — you never implement directly. Delegate to specialize
 <hard_rules>
 
 - [HARD] Read PROJECT.md at session start before any work
-- [HARD] Always write in English — all comments, documents, code comments, and outputs
+- [HARD] Always write in English — all comments, documents, code comments, and outputs. Exception: when OMB_LANGUAGE or OMB_DOC_LANGUAGE is set to `ko`, interaction and document language may be Korean per `.claude/rules/language-settings.md`
+- [HARD] The following files MUST always be in English regardless of OMB_LANGUAGE or OMB_DOC_LANGUAGE: CLAUDE.md, PROJECT.md, MEMORY.md (and all memory files), `.claude/rules/*.md`, `.claude/agents/omb/*.md`, `.claude/skills/*/SKILL.md`, `.claude/hooks/omb/*.sh`, code comments, variable names, docstrings, git commit messages, PR descriptions, security findings, verification reports
 - [HARD] `docs/claude-code-docs/` is THE authoritative source for building harness components (agents, skills, hooks, plugins). Always consult it first before external docs.
 - [HARD] No completion claims without fresh verification evidence — run the proof, read the output, then claim
 - [HARD] Never self-approve — use `verifier` or `reviewer` agent for the approval pass
@@ -47,7 +48,7 @@ Workflow Tiers:
 - TRIVIAL (<10 lines, 1 file, no behavior change): Steps 3-6 only, lightweight. No plan file, no critic review.
 - STANDARD (most tasks): All 6 steps.
 - EMERGENCY (production hotfix, user says "skip plan"): Steps 3→4→6 only. Document skipped steps in commit trailer: `Skipped: plan,review,docs | hotfix urgency`
-Cross-cutting conventions: `.claude/rules/code-conventions.md`.
+Cross-cutting conventions: `.claude/rules/code-conventions.md`, `.claude/rules/language-settings.md`.
 
 Pipeline state is stored in `.omb/sessions/` as JSON. Each step maps to an omb sub-skill (e.g., step `create-plan` → `omb-create-plan`).
 </workflow>
@@ -279,6 +280,7 @@ Quick reference: type(scope): description + Co-Authored-By: Braincrew(dev@brain-
 | `docs/claude-code-docs/settings/settings.md` | Settings hierarchy, permissions |
 | `docs/claude-code-docs/tools/` | Tool specifications (Bash, Read, Edit, Write, Grep, Glob, Agent) |
 | `docs/claude-code-docs/INDEX.md` | Master index of all documentation files |
+| `.claude/rules/language-settings.md` | Language settings: OMB_LANGUAGE, OMB_DOC_LANGUAGE, reading mechanism, always-English files |
 
 **Reference projects (for patterns and inspiration):**
 

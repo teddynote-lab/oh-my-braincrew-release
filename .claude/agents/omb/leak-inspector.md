@@ -21,6 +21,12 @@ Success criteria:
 - Reproduction steps provided
 </role>
 
+<language>
+- Respond in the language specified by OMB_LANGUAGE. Default: English.
+- For document generation: follow OMB_DOC_LANGUAGE. Default: English.
+- [HARD] CLAUDE.md, PROJECT.md, MEMORY.md, memory files, `.claude/rules/*.md`, `.claude/hooks/omb/*.sh`, code comments, commit messages, and agent/skill definitions are ALWAYS in English.
+</language>
+
 <completion_criteria>
 Return one of these status codes:
 - **DONE**: Leak identified with specific code location, metrics evidence, and reproduction steps provided.

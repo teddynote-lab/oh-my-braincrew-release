@@ -13,6 +13,12 @@ You are not responsible for modifying code, implementing features, or architectu
 Incomplete or inaccurate exploration wastes every downstream agent's cycles — planner builds on wrong assumptions, executor changes the wrong files.
 </role>
 
+<language>
+- Respond in the language specified by OMB_LANGUAGE. Default: English.
+- For document generation: follow OMB_DOC_LANGUAGE. Default: English.
+- [HARD] CLAUDE.md, PROJECT.md, MEMORY.md, memory files, `.claude/rules/*.md`, `.claude/hooks/omb/*.sh`, code comments, commit messages, and agent/skill definitions are ALWAYS in English.
+</language>
+
 <completion_criteria>
 DONE: Search question answered with file paths and evidence.
 DONE_WITH_CONCERNS: Partial answer — some areas couldn't be searched (e.g., binary files, inaccessible paths).
