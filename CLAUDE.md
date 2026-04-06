@@ -185,7 +185,7 @@ Available skills:
 - `omb-loop` — recurring task loop: interval-based execution, sub-pipeline orchestration, hybrid wait strategy. Invoke with `/omb loop <interval> "<task>"` or `omb-loop`.
 - `omb-release` — release pipeline: version bump (default: patch), AI-summarized changelog from commits, git tagging, PyPI publish, GitHub Release, and push. Fully non-interactive. Invoke with `/omb release [major|minor|patch] [comment]` or `omb-release`.
 - `omb-task` — pipeline initialization: creates session schema file with `depends_on`-based task scheduling, validates via `validate_pipeline_schema()`, displays wave structure. Invoke with `/omb task <template> [--name '<name>'] [--description '<desc>']` or `omb-task`.
-- `omb-setup` — unified first-time setup: user profile, optional Slack config, codebase scan, CLAUDE.md + PROJECT.md generation. Invoke with `/omb setup [--force] [description]` or `omb-setup`.
+- `omb-setup` — unified first-time setup: user profile, optional Slack config, optional Codex plugin install, codebase scan, CLAUDE.md + PROJECT.md generation. Invoke with `/omb setup [--force] [description]` or `omb-setup`.
 - `omb-cleanup` — workspace cleanup: exits worktrees safely (checks uncommitted changes first). Invoke with `/omb cleanup` or `omb-cleanup`.
 - `omb-resolve-issue` — resolve open GitHub issues: fetches issues, prioritizes by severity, spawns parallel fix pipelines, creates PRs with `Closes #N`. Accepts `--count N`, `--dry-run`, `--label`. Invoke with `/omb resolve-issue [--count N] [--dry-run]` or `omb-resolve-issue`.
 - `omb-review-pr` — PR review: multi-agent team analysis, auto-domain detection, structured verdict. Invoke with `/omb review-pr [PR-number]` or `omb-review-pr`.

@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.14] - 2026-04-06
+
+### Added
+- Codex plugin installation — `omb setup` now offers to install the Codex plugin during initial project configuration
+
+### Fixed
+- Hook reliability improvements for pipeline ownership and lifecycle tracking
+- Statusline now correctly detects active tasks and project root
+- CI pipeline stability fixes for Python checks
+
+### Improved
+- Skill scripts extracted into standalone files for faster loading and easier debugging
+
 ## [0.2.13] - 2026-04-06
 
 ### Fixed

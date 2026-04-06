@@ -192,18 +192,7 @@ The public release repo (`teddynote-lab/oh-my-braincrew-release`) serves binary 
 
 7. **Strip secrets and internal artifacts**:
    ```bash
-   # Remove secrets from settings — use shell variable in unquoted heredoc for expansion
-   python3 << PYEOF
-   import json, pathlib
-   settings = pathlib.Path("${RELEASE_REPO_DIR}/.claude/settings.json")
-   if settings.exists():
-       data = json.loads(settings.read_text())
-       if "env" in data:
-           for k in list(data["env"]):
-               if any(s in k for s in ("KEY", "TOKEN", "SECRET", "PASSWORD")):
-                   del data["env"][k]
-       settings.write_text(json.dumps(data, indent=2) + "\n")
-   PYEOF
+   bash ${PROJECT_ROOT}/.claude/skills/omb-release/scripts/sanitize-settings.sh "${RELEASE_REPO_DIR}"
    ```
 
    ```bash

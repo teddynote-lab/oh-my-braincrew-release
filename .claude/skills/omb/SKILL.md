@@ -20,8 +20,7 @@ argument-hint: "[subcommand] [args] | \"natural language task\""
 
 Read language settings from `.claude/settings.json`:
 
-!cat .claude/settings.json 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); e=d.get('env',{}); print(f'OMB_LANGUAGE={e.get(\"OMB_LANGUAGE\",\"en\")}')"
-!cat .claude/settings.json 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); e=d.get('env',{}); print(f'OMB_DOC_LANGUAGE={e.get(\"OMB_DOC_LANGUAGE\",\"en\")}')"
+!bash .claude/skills/omb/scripts/read-language-settings.sh .claude/settings.json
 
 Parse the output and store as `OMB_LANGUAGE` and `OMB_DOC_LANGUAGE`.
 [HARD] If value is not `"en"` or `"ko"`, default to `"en"`.

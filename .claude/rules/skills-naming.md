@@ -62,7 +62,7 @@ Sub-skills support two invocation methods:
 | `loop` | `run-loop` | `omb-loop` | `omb-loop` | Recurring task loop — interval execution with sub-pipeline support |
 | `release` | `publish`, `tag`, `version` | `omb-release` | `omb-release` | Release pipeline — version bump, changelog, tag, build, push |
 | `task` | `init-pipeline`, `create-pipeline`, `new-pipeline`, `new-session` | `omb-task` | `omb-task` | Initialize pipeline from pre-made templates or interactive Manual mode |
-| `setup` | `init`, `initialize`, `configure`, `init-survey`, `init-project`, `setup-project`, `setup-claude`, `survey` | `omb-setup` | `omb-setup` | First-time setup — user profile, Slack config, CLAUDE.md + PROJECT.md generation |
+| `setup` | `init`, `initialize`, `configure`, `init-survey`, `init-project`, `setup-project`, `setup-claude`, `survey` | `omb-setup` | `omb-setup` | First-time setup — user profile, Slack config, Codex plugin, CLAUDE.md + PROJECT.md generation |
 | `cleanup` | `clean`, `tidy` | `omb-cleanup` | `omb-cleanup` | Clean up stale session state and exit worktrees safely |
 | `resolve-issue` | `fix-issues`, `auto-fix` | `omb-resolve-issue` | `omb-resolve-issue` | Resolve open GitHub issues via parallel worktree pipelines |
 | `review-pr` | `pr-review` | `omb-review-pr` | `omb-review-pr` | Review a PR with multi-agent analysis |

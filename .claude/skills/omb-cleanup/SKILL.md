@@ -103,7 +103,7 @@ grep -rl "$WT_ID" .omb/sessions/finished/ .omb/sessions/ 2>/dev/null
 If a matching pipeline JSON is found, read the `plan_file` field:
 
 ```bash
-python3 -c "import json,sys; d=json.load(open(sys.argv[1])); print(d.get('plan_file',''))" "<matched-pipeline>.json"
+bash ${PROJECT_ROOT}/.claude/skills/omb-cleanup/scripts/extract-plan-file.sh "<matched-pipeline>.json"
 ```
 
 **Decision logic:**
@@ -174,15 +174,7 @@ ls .omb/sessions/*.json 2>/dev/null
 For each file found, extract key fields:
 
 ```bash
-python3 -c "
-import json, sys, glob
-for f in sorted(glob.glob('.omb/sessions/*.json')):
-    try:
-        d = json.load(open(f))
-        print(f\"{f}: id={d.get('id','?')} name={d.get('name','?')} status={d.get('status','?')} step={d.get('current_step','?')}\")
-    except Exception as e:
-        print(f\"{f}: malformed — {e}\")
-"
+bash ${PROJECT_ROOT}/.claude/skills/omb-cleanup/scripts/list-pipelines.sh ".omb/sessions"
 ```
 
 Present the FULL pipeline list to the user. Count how many have `active` or `paused` status.
