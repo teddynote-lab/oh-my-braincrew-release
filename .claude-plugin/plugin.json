@@ -1,6 +1,6 @@
 {
   "name": "omb",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "description": "Custom multi-agent orchestration harness for Claude Code — Python, TypeScript, FastAPI, LangChain/LangGraph stack",
   "commands": "./.claude/commands/",
   "skills": "./.claude/skills/",

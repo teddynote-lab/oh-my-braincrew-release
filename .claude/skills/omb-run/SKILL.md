@@ -69,14 +69,17 @@ Status: active
 Tasks: <total> total, <done> done, <pending> pending
 ```
 
-5. Set driver flag to prevent Stop hook from advancing pipeline state:
+5. Set driver flag and bind Claude session UUID to prevent Stop hook from advancing pipeline state:
 ```bash
 python3 -c "
-import json
+import json, os
 path = '${PROJECT_ROOT}/.omb/sessions/<session_id>.json'
 with open(path) as f:
     data = json.load(f)
 data['driver'] = 'omb-run'
+claude_uuid = os.environ.get('CLAUDE_SESSION_ID', '')
+if claude_uuid and not data.get('claude_session_id'):
+    data['claude_session_id'] = claude_uuid
 with open(path, 'w') as f:
     json.dump(data, f, indent=2)
 print('driver set to omb-run')
