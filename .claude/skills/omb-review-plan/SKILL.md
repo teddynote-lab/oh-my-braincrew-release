@@ -30,6 +30,8 @@ The review is complete when ALL of these hold:
 - Updated plan written to disk (if any fixes applied)
 - Review report presented to user with verdict
 - TDD Implementation Plan section validated by T3 (coverage achievability, edge cases, test granularity)
+- Every team finding passes the adversarial quality gate: material (not stylistic), grounded (supported by plan text), and actionable (concrete fix)
+- Findings below the material finding bar (style, naming, low-value cleanup) are rejected during dedup
 
 Status codes: APPROVED | NEEDS_REVISION | BLOCKED
 </completion_criteria>
@@ -40,6 +42,10 @@ Status codes: APPROVED | NEEDS_REVISION | BLOCKED
 - Plan section is ambiguous (could be interpreted multiple ways): flag as P2 "Ambiguous plan section", suggest the user clarify — do not guess intent
 - Domain detection fires on false positive (e.g., "table" triggers database but plan is about HTML tables): review the spawned team's report — if findings are irrelevant, discard them silently
 - Unsure whether an issue is P0 or P1: default to P0 — over-escalation is safer than under-escalation
+- Grounding rule: every finding must be defensible from the plan content. Do not invent failure modes, attack chains, or runtime behavior not supported by the plan text. If a conclusion depends on inference, state it explicitly and keep confidence honest.
+- Calibration rule: prefer one strong finding over several weak ones. Do not dilute serious issues with filler. If the plan section looks sound, say so directly.
+- Final check: before accepting findings from any team, verify each is adversarial (not stylistic), tied to a concrete plan section, plausible under a real failure scenario, and actionable for a plan revision.
+- Operating stance integration: the adversarial stance sets the review *approach*, while severity assignment still follows ambiguity_policy rules — default to P1 when uncertain, P0 for security.
 </ambiguity_policy>
 
 <scope_boundaries>
@@ -50,6 +56,24 @@ This skill reviews plans — it does NOT:
 - Modify files outside `.omb/plans/`
 - Make architecture decisions — it surfaces issues for the user or planner to resolve
 </scope_boundaries>
+
+<adversarial_stance>
+All review teams operate under an adversarial review pattern:
+
+**Operating principle:** Default to skepticism. Assume the plan can fail in subtle, high-cost, or user-visible ways until the evidence says otherwise. Do not give credit for good intent, partial solutions, or likely follow-up work. If something only works on the happy path, treat that as a real weakness.
+
+**Intensity tiers:**
+- Full adversarial (T1: Architecture, T8: Security): actively try to break confidence in the plan. Look for the strongest reasons it should not proceed. 5 new sections: operating_stance, attack_surface, review_method, grounding_rules, final_check.
+- Calibrated adversarial (T2-T7, T9-T13): skeptical but proportional. Challenge assumptions and surface risks, but do not block on speculative concerns without evidence. 3 new sections: operating_stance, attack_surface, grounding_rules.
+
+**Attack surface (combined plan-level + code-level):**
+Plan-level: dependency ordering errors, missing scope, vague deliverables, absent rollback strategy, unverifiable criteria, parallel execution assumptions
+Code-level: auth/permissions gaps, data loss/corruption risks, race conditions, idempotency gaps, empty-state handling, version skew, observability blind spots
+
+**Finding bar:** Report only material findings. Exclude style feedback, naming preferences, low-value cleanup, or speculative concerns without evidence. Every finding must answer: (1) what can go wrong, (2) why this plan section is vulnerable, (3) likely impact, (4) concrete fix.
+
+**Severity assignment:** The adversarial stance does NOT override existing severity rules. Default to P1 when uncertain, P0 for security issues. The UNCERTAIN: prefix convention remains in effect for low-confidence findings.
+</adversarial_stance>
 
 ---
 

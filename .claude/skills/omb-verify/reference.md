@@ -1,4 +1,5 @@
 # Verify Skill Reference
+<!-- OMB-PLAN-000088: added lint check steps to verifier templates -->
 
 ## 1. Verifier Agent Templates
 
@@ -33,11 +34,12 @@ Checks:
 1. Identify test files related to the changed files (grep for imports, check tests/ directory)
 2. Run pytest: `pytest {test_paths} -v` — read FULL output, not just exit code
 3. Run type checker: `pyright` or `mypy --strict` on changed files
-4. For API endpoints: curl each endpoint with valid and invalid payloads
-5. For DB changes: verify migration status with `alembic current`
-6. Read every command's full output — exit code 0 does not guarantee all passed
-7. Build evidence table with actual output excerpts
-8. Report per output contract
+4. Run linter: `ruff check {changed_files}` — report error count and per-file details (rule ID, line, message)
+5. For API endpoints: curl each endpoint with valid and invalid payloads
+6. For DB changes: verify migration status with `alembic current`
+7. Read every command's full output — exit code 0 does not guarantee all passed
+8. Build evidence table with actual output excerpts
+9. Report per output contract
 </execution_order>
 
 <output_contract>
@@ -49,6 +51,7 @@ LAYER: python
 |-------|--------|----------|
 | pytest | PASS/FAIL | {N} passed, {N} failed, {N} skipped |
 | type check | PASS/FAIL | {N} errors |
+| ruff check | PASS/FAIL/BLOCKED | {N} errors — {file}:{line} {rule_id} {message} |
 | endpoint /api/X | PASS/FAIL | {status_code}, {response_shape} |
 
 ## Failures (if any)
@@ -108,9 +111,10 @@ Checks:
 1. Identify test files related to changed files
 2. Run vitest: `npx vitest run {test_paths}` — read FULL output
 3. Run type checker: `tsc --noEmit` — read error count and details
-4. For React components: check for console errors in test output
-5. Build evidence table
-6. Report per output contract
+4. Run linter: `npx eslint {changed_files}` — report error count and per-file details (BLOCKED if no eslint config)
+5. For React components: check for console errors in test output
+6. Build evidence table
+7. Report per output contract
 </execution_order>
 
 <output_contract>
@@ -122,6 +126,7 @@ LAYER: typescript
 |-------|--------|----------|
 | vitest | PASS/FAIL | {N} passed, {N} failed |
 | tsc --noEmit | PASS/FAIL | {N} errors |
+| eslint | PASS/FAIL/BLOCKED | {N} errors — {file}:{line} {rule_id} {message} |
 
 ## Failures (if any)
 - **Check**: {check name}
@@ -424,6 +429,9 @@ Every verification check produces an evidence row:
 | TypeScript test failure | executor | sonnet | General implementation fix |
 | Type check error (pyright/mypy) | executor | sonnet | Type annotation fix |
 | Type check error (tsc) | executor | sonnet | TypeScript type fix |
+| Ruff lint failure | executor | sonnet | Python style/lint fix |
+| ESLint lint failure | executor | sonnet | TypeScript/JS style fix |
+<!-- OMB-PLAN-000088: added lint failure routing -->
 | FastAPI endpoint error | api-specialist | sonnet | API-specific knowledge |
 | Express/Fastify endpoint error | api-specialist | sonnet | API-specific knowledge |
 | DB migration failure | db-specialist | sonnet | Migration-specific knowledge |
@@ -446,6 +454,9 @@ Every verification check produces an evidence row:
 | Regression penalty | Regression counts as a new failure, does NOT reset loop counter | Prevents infinite loops where fixes and regressions trade places |
 | Concurrent fixes | Fix agents for different layers can run in parallel | Layers are independent; sequential fixing wastes time without quality gain |
 | Agent escalation | If executor fails twice, try domain specialist on 3rd attempt | Specialized knowledge may succeed where general implementation skills fail |
+| Ruff auto-fix | On ruff failure, executor runs `ruff check --fix` (safe only, never --unsafe-fixes) before re-verification | Safe auto-fixes eliminate trivial style violations without risk; unsafe fixes may alter semantics |
+| ESLint manual-fix | ESLint failures require manual code changes. Verifier reports NEEDS_CONTEXT so orchestrator surfaces to user. No auto-fix. | ESLint rules often reflect intent decisions that cannot be auto-resolved without context |
+<!-- OMB-PLAN-000088: added lint failure routing -->
 
 ### Fix Agent Prompt Template
 
@@ -1505,6 +1516,9 @@ This section supersedes and extends §4 Fix Loop Policy. The enhanced policy int
 | Layer verification | Python test failure | executor | sonnet |
 | Layer verification | TypeScript test failure | executor | sonnet |
 | Layer verification | Type check error | executor | sonnet |
+| Layer verification | Ruff lint failure | executor | sonnet |
+| Layer verification | ESLint lint failure | executor | sonnet |
+<!-- OMB-PLAN-000088: added lint failure routing -->
 | Layer verification | FastAPI endpoint error | api-specialist | sonnet |
 | Layer verification | DB migration failure | db-specialist | sonnet |
 | Layer verification | React component error | frontend-engineer | sonnet |

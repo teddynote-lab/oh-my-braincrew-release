@@ -147,6 +147,7 @@ Tier 2 — Domain Specialists (stack-specific):
 - `infra-engineer` (sonnet): Docker/docker-compose, GitHub Actions CI/CD, Nginx/Caddy, monitoring (Prometheus/Grafana), Slack alerts + AST-grep search/replace, LSP read+mutation
 - `async-coder` (sonnet): Python asyncio, Node.js async/await, React concurrent features, race conditions, queue/worker patterns + AST-grep search/replace, LSP read+mutation
 - `security-reviewer` (opus): OWASP for FastAPI + Node.js, Electron RCE, React XSS, Redis ACLs, Postgres RLS, dependency audit + AST-grep search, LSP read
+- `codex-rescue` (sonnet): thin forwarding wrapper for Codex companion task runtime — delegation, investigation, fix requests + Bash, Read, Grep, Glob
 
 Tier 3 — Ops:
 - `debugger` (sonnet): root-cause analysis — FastAPI traceback, Node.js async traces, React lifecycle, LangGraph state replay, Redis MONITOR, Postgres EXPLAIN + AST-grep search, LSP read
@@ -189,12 +190,24 @@ Available skills:
 - `omb-cleanup` — workspace cleanup: exits worktrees safely (checks uncommitted changes first). Invoke with `/omb cleanup` or `omb-cleanup`.
 - `omb-resolve-issue` — resolve open GitHub issues: fetches issues, prioritizes by severity, spawns parallel fix pipelines, creates PRs with `Closes #N`. Accepts `--count N`, `--dry-run`, `--label`. Invoke with `/omb resolve-issue [--count N] [--dry-run]` or `omb-resolve-issue`.
 - `omb-review-pr` — PR review: multi-agent team analysis, auto-domain detection, structured verdict. Invoke with `/omb review-pr [PR-number]` or `omb-review-pr`.
+- `omb-codex-review` — Codex code review against local git state. Invoke with `/omb codex-review [flags]` or `omb-codex-review`.
+- `omb-codex-adversarial-review` — Adversarial Codex review challenging approach and design. Invoke with `/omb codex-adversarial-review [flags] [focus]` or `omb-codex-adversarial-review`.
+- `omb-codex-rescue` — Delegate investigation or fix work to Codex rescue subagent. Invoke with `/omb codex-rescue [flags] [task]` or `omb-codex-rescue`.
+- `omb-codex-setup` — Check Codex CLI readiness and toggle review gate. Invoke with `/omb codex-setup [flags]` or `omb-codex-setup`.
+- `omb-codex-status` — Show active and recent Codex jobs. Invoke with `/omb codex-status [job-id]` or `omb-codex-status`.
+- `omb-codex-result` — Show stored output for finished Codex job. Invoke with `/omb codex-result [job-id]` or `omb-codex-result`.
+- `omb-codex-cancel` — Cancel active background Codex job. Invoke with `/omb codex-cancel [job-id]` or `omb-codex-cancel`.
 
 **Generation skills** (low-level, `user-invocable: false`):
 - `omb-mermaid-generator` — Mermaid diagram generator (flowchart, sequence, state, class) with mermaid-cli rendering.
 
 **Tool reference skills** (reference-only, `user-invocable: false`):
 - `omb-ast-grep-guide` — AST-based structural code search, rule syntax, and common patterns for Python/TypeScript/Go. Invoke with `omb-ast-grep-guide`.
+
+**Codex internal skills** (reference-only, `user-invocable: false`):
+- `codex-cli-runtime` — Internal runtime contract for calling codex-companion from Claude Code.
+- `codex-result-handling` — Internal guidance for presenting Codex output to the user.
+- `gpt-5-4-prompting` — Internal guidance for composing GPT-5.4 prompts for Codex tasks.
 
 **LangChain/LangGraph reference skills** (reference-only, `disable-model-invocation: true`):
 - `lc-framework-selection` — Framework decision guide (LangChain vs LangGraph vs Deep Agents). Invoke with `lc-framework-selection`.

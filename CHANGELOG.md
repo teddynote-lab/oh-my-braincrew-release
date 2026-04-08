@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.16] - 2026-04-09
+
+### Added
+- Codex plugin integration — 7 new `/omb codex-*` commands for delegating code review, adversarial analysis, and rescue tasks to OpenAI Codex
+- Driver heartbeat for improved pipeline session health monitoring
+- Ruff and ESLint lint checks now run automatically during verification
+
+### Fixed
+- Verification output no longer corrupted by ANSI escape sequences
+- Type checker warnings resolved in the stop hook engine
+- Pipeline lifecycle no longer fails when clearing driver state after archiving
+
+### Improved
+- Plan review now uses adversarial review pattern for more thorough and skeptical analysis
+
 ## [0.2.15] - 2026-04-07
 
 ### Fixed

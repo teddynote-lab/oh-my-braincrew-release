@@ -66,6 +66,21 @@ Sub-skills support two invocation methods:
 | `cleanup` | `clean`, `tidy` | `omb-cleanup` | `omb-cleanup` | Clean up stale session state and exit worktrees safely |
 | `resolve-issue` | `fix-issues`, `auto-fix` | `omb-resolve-issue` | `omb-resolve-issue` | Resolve open GitHub issues via parallel worktree pipelines |
 | `review-pr` | `pr-review` | `omb-review-pr` | `omb-review-pr` | Review a PR with multi-agent analysis |
+| `codex-review` | `cr` | `omb-codex-review` | `omb-codex-review` | Codex code review against local git state |
+| `codex-adversarial-review` | `car` | `omb-codex-adversarial-review` | `omb-codex-adversarial-review` | Adversarial Codex review |
+| `codex-rescue` | `rescue` | `omb-codex-rescue` | `omb-codex-rescue` | Delegate to Codex rescue subagent |
+| `codex-setup` | `codex-init` | `omb-codex-setup` | `omb-codex-setup` | Check Codex CLI readiness |
+| `codex-status` | `codex-jobs` | `omb-codex-status` | `omb-codex-status` | Show Codex job status |
+| `codex-result` | — | `omb-codex-result` | `omb-codex-result` | Show finished Codex job output |
+| `codex-cancel` | — | `omb-codex-cancel` | `omb-codex-cancel` | Cancel active Codex job |
+
+### Codex Internal Skills (reference-only, `user-invocable: false`)
+
+| Skill | Directory | Description |
+|-------|-----------|-------------|
+| `codex-cli-runtime` | `skills/codex-cli-runtime/` | Internal runtime contract for calling codex-companion from Claude Code |
+| `codex-result-handling` | `skills/codex-result-handling/` | Internal guidance for presenting Codex output to the user |
+| `gpt-5-4-prompting` | `skills/gpt-5-4-prompting/` | Internal guidance for composing GPT-5.4 prompts for Codex tasks |
 
 ### LangChain/LangGraph Reference Skills (unchanged)
 

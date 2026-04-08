@@ -3,25 +3,29 @@
 # Usage: bash run-checks.sh <layer> [test-path]
 # Output: JSON with per-check results.
 # Optional convenience wrapper — verifier agents can invoke commands directly.
-set -euo pipefail
+set -uo pipefail
 
 LAYER="${1:-}"
 TEST_PATH="${2:-}"
+LINT_PATH="${3:-}"
 
 # Help flag
 if [[ "$LAYER" == "--help" || "$LAYER" == "-h" ]]; then
   cat <<'HELP'
-Usage: bash run-checks.sh <layer> [test-path]
+Usage: bash run-checks.sh <layer> [test-path] [lint-path]
 
 Run verification checks for a single stack layer.
 Outputs JSON with per-check results.
 
 Layers: python, typescript, node, database, redis
 Optional test-path: specific test directory or file to run
+Optional lint-path: specific path for ruff/eslint to scan (defaults to .)
 
 Examples:
   bash run-checks.sh python tests/auth/
+  bash run-checks.sh python tests/auth/ src/
   bash run-checks.sh typescript
+  bash run-checks.sh typescript "" src/
   bash run-checks.sh database
 HELP
   exit 0
@@ -83,6 +87,10 @@ run_check() {
 # Escape string for JSON output
 json_escape() {
   local str="$1"
+  # Strip ANSI escape sequences first (color codes, cursor movement, etc.)
+  str=$(printf '%s' "$str" | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' 2>/dev/null || printf '%s' "$str")
+  # Remove remaining control characters (0x00-0x1f except \n \r \t)
+  str=$(printf '%s' "$str" | tr -d '\000-\010\013\014\016-\037' 2>/dev/null || printf '%s' "$str")
   str="${str//\\/\\\\}"
   str="${str//\"/\\\"}"
   str="${str//$'\n'/\\n}"
@@ -131,6 +139,18 @@ case "$LAYER" in
     else
       add_result "type-check" "blocked" "neither pyright nor mypy found"
     fi
+
+    # OMB-PLAN-000088: ruff lint check
+    if cmd_exists ruff; then
+      if [[ -n "$LINT_PATH" ]]; then
+        run_check "ruff" "ruff check $LINT_PATH 2>&1"
+      else
+        run_check "ruff" "ruff check . 2>&1"
+      fi
+      add_result "ruff check" "$LAST_RESULT" "$LAST_EVIDENCE"
+    else
+      add_result "ruff check" "blocked" "ruff not installed"
+    fi
     ;;
 
   typescript)
@@ -153,6 +173,33 @@ case "$LAYER" in
       add_result "tsc --noEmit" "$LAST_RESULT" "$LAST_EVIDENCE"
     else
       add_result "tsc --noEmit" "blocked" "npx not found"
+    fi
+
+    # OMB-PLAN-000088: eslint lint check
+    if cmd_exists npx; then
+      # Determine lint target directory for config detection
+      ESLINT_LINT_DIR="${LINT_PATH:-.}"
+      # Check if eslint config exists in lint target or project root
+      ESLINT_HAS_CONFIG=false
+      for ESLINT_CONFIG_FILE in ".eslintrc" ".eslintrc.js" ".eslintrc.json" ".eslintrc.yml" "eslint.config.js" "eslint.config.mjs" "eslint.config.ts"; do
+        if [[ -f "${ESLINT_LINT_DIR}/${ESLINT_CONFIG_FILE}" || -f "./${ESLINT_CONFIG_FILE}" ]]; then
+          ESLINT_HAS_CONFIG=true
+          break
+        fi
+      done
+
+      if [[ "$ESLINT_HAS_CONFIG" == "true" ]]; then
+        if [[ -n "$LINT_PATH" ]]; then
+          run_check "eslint" "npx eslint $LINT_PATH 2>&1"
+        else
+          run_check "eslint" "npx eslint . 2>&1"
+        fi
+        add_result "eslint" "$LAST_RESULT" "$LAST_EVIDENCE"
+      else
+        add_result "eslint" "blocked" "no eslint config found"
+      fi
+    else
+      add_result "eslint" "blocked" "npx not found"
     fi
     ;;
 

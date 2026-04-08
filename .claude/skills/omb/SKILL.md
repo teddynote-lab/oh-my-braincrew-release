@@ -3,7 +3,9 @@ name: omb
 description: >
   OMB orchestrator — unified dispatcher for the oh-my-braincrew workflow.
   Routes subcommands (plan, review, exec, verify, doc, pr, interview,
-  prompt-guide, react, design, setup) to specialized sub-skills.
+  prompt-guide, react, design, setup, codex-review, codex-adversarial-review,
+  codex-rescue, codex-setup, codex-status, codex-result, codex-cancel)
+  to specialized sub-skills.
   Use for any omb workflow step from planning to PR creation.
 allowed-tools: Skill, AskUserQuestion, TaskCreate, TaskUpdate, TaskList, TaskGet, Bash, Read, Write, Edit, Glob, Grep
 argument-hint: "[subcommand] [args] | \"natural language task\""
@@ -85,6 +87,13 @@ Extract the FIRST WORD of the (possibly flag-stripped) input for subcommand matc
 | `resolve-issue` | `fix-issues`, `auto-fix` | `omb-resolve-issue` | Resolve open GitHub issues via parallel worktree pipelines |
 | `review-pr` | `pr-review` | `omb-review-pr` | Review a PR with multi-agent analysis |
 | `technical-report` | `tech-report`, `codebase-report`, `project-report` | `omb-technical-report` | Analyze target project and generate per-domain technical reports |
+| `codex-review` | `cr` | `omb-codex-review` | Run Codex code review against local git state |
+| `codex-adversarial-review` | `car` | `omb-codex-adversarial-review` | Run adversarial Codex review challenging approach and design |
+| `codex-rescue` | `rescue` | `omb-codex-rescue` | Delegate investigation or fix work to Codex rescue subagent |
+| `codex-setup` | `codex-init` | `omb-codex-setup` | Check Codex CLI readiness and toggle review gate |
+| `codex-status` | `codex-jobs` | `omb-codex-status` | Show active and recent Codex jobs |
+| `codex-result` | — | `omb-codex-result` | Show stored output for finished Codex job |
+| `codex-cancel` | — | `omb-codex-cancel` | Cancel active background Codex job |
 
 ### Priority 2: Workflow Keyword Detection
 
@@ -102,6 +111,8 @@ Only if Priority 1 did not match: Check if the Raw User Input contains workflow-
 - Setup language (setup, init, initialize, configure, survey, profile) routes to **setup**
 - Issue resolution language (resolve-issue, resolve issues, fix issues, auto-fix) routes to **resolve-issue**
 - Technical report language (technical report, codebase analysis, project analysis, architecture report, generate report) routes to **technical-report**
+- Codex language (codex review, codex check, codex rescue, codex fix, ask codex, delegate to codex) routes to **codex-review** or **codex-rescue** based on intent
+- Codex management language (codex status, codex jobs, codex result, codex cancel) routes to **codex-status**
 
 ### Priority 3: Default Behavior
 
