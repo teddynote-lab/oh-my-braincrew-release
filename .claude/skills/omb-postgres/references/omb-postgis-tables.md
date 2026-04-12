@@ -1,1 +1,0 @@
-../../omb-postgis-tables/SKILL.md

@@ -1,1 +1,0 @@
-../../omb-hypertable-migration/SKILL.md

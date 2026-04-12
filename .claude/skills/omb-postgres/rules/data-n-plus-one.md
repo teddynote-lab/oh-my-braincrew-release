@@ -1,1 +1,0 @@
-../../omb-postgres-best-practices/references/data-n-plus-one.md

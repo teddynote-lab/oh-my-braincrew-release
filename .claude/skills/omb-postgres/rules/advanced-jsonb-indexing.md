@@ -1,1 +1,0 @@
-../../omb-postgres-best-practices/references/advanced-jsonb-indexing.md

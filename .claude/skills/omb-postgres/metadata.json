@@ -1,9 +1,0 @@
-{
-  "version": "1.0.0",
-  "organization": "oh-my-braincrew",
-  "date": "April 2026",
-  "abstract": "Unified PostgreSQL expertise hub targeting PG17. Integrates table design, best practice rules, and ORM conventions (SQLAlchemy 2.0 async).",
-  "sources": [
-    "pg-aiguide (TigerData) — Apache-2.0"
-  ]
-}

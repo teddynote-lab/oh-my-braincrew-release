@@ -1,1 +1,0 @@
-../../omb-timescaledb-hypertables/SKILL.md

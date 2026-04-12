@@ -1,1 +1,0 @@
-../../omb-hypertable-candidates/SKILL.md

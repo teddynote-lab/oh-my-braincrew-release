@@ -1,1 +1,0 @@
-../../omb-postgres-best-practices/references/schema-primary-keys.md

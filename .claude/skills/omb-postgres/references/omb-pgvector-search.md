@@ -1,1 +1,0 @@
-../../omb-pgvector-search/SKILL.md

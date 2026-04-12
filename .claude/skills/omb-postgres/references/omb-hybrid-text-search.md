@@ -1,1 +1,0 @@
-../../omb-hybrid-text-search/SKILL.md

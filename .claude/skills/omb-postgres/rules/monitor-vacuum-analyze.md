@@ -1,1 +1,0 @@
-../../omb-postgres-best-practices/references/monitor-vacuum-analyze.md
