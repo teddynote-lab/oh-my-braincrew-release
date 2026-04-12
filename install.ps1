@@ -1,6 +1,6 @@
 #Requires -Version 5.1
 # install.ps1 — Download and install the latest oh-my-braincrew binary from GitHub Releases
-# Usage: iwr -useb https://raw.githubusercontent.com/teddynote-lab/oh-my-braincrew-release/main/scripts/install.ps1 | iex
+# Usage: iwr -useb https://raw.githubusercontent.com/teddynote-lab/oh-my-braincrew-release/main/install.ps1 | iex
 [CmdletBinding()]
 param()
 
