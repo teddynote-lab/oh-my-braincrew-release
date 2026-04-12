@@ -169,11 +169,9 @@ main() {
 
   info "Run '${BINARY_NAME} --version' to verify the installation."
   echo ""
-  # Create omb symlink for shorter command
-  if [ ! -e "${INSTALL_DIR}/omb" ]; then
-    ln -sf "${BINARY_NAME}" "${INSTALL_DIR}/omb"
-    info "Created symlink: omb -> ${BINARY_NAME}"
-  fi
+  # Create or update omb symlink for shorter command
+  ln -sf "${BINARY_NAME}" "${INSTALL_DIR}/omb"
+  info "Symlink: omb -> ${BINARY_NAME}"
 
   echo "To set up omb harness files in your project:"
   echo ""
