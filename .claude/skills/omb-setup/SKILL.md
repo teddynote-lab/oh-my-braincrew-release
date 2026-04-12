@@ -406,8 +406,8 @@ After all steps pass, inform the user:
 ```
 Codex CLI integrated successfully.
   Use: /omb codex review     — code review
-  Use: /omb codex adversarial-review — adversarial review
-  Use: /omb codex exec       — delegate tasks
+  Use: /omb codex adv-review  — adversarial review
+  Use: /omb codex run        — delegate tasks
 ```
 
 ---

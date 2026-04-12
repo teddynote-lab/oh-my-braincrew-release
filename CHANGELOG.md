@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-04-12
+
+### Changed
+- Codex skills renamed for improved consistency
+- PR template enhanced with language support and conditional sections
+- `omb:document` renamed to `omb:doc` for brevity
+- README restructured with usage examples and workflow documentation
+
+### Fixed
+- Statusline now uses project root for folder name and displays rate limit reset time
+
+### Maintenance
+- Improved worktree cleanup execution flow
+
 ## [0.1.1] - 2026-04-12
 
 ### Breaking Changes

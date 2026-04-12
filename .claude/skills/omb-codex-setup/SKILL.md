@@ -54,4 +54,4 @@ Codex CLI setup complete:
 
 ## Step 4: Summary
 
-Report the overall status. If all checks pass, confirm Codex is ready to use with `/omb codex review` and `/omb codex exec`.
+Report the overall status. If all checks pass, confirm Codex is ready to use with `/omb codex review` and `/omb codex run`.

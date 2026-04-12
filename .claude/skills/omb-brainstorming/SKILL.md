@@ -121,7 +121,7 @@ The built-in "Other" option lets the user provide freeform input if neither opti
 
 **Documentation:**
 - Write the validated design to `docs/plans/YYYY-MM-DD-<topic>-design.md`
-- Use `Skill("omb-document")` for documentation formatting guidelines
+- Use `Skill("omb-doc")` for documentation formatting guidelines
 - Commit the design document to git
 
 **Implementation (if continuing):**

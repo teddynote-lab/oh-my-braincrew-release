@@ -2,7 +2,7 @@
 name: omb
 description: >
   OMB orchestrator — unified dispatcher for the oh-my-braincrew workflow.
-  Routes subcommands (interview, plan, plan-review, run, verify, document, pr, release,
+  Routes subcommands (interview, plan, plan-review, run, verify, doc, pr, release,
   prompt-guide, prompt-review, lint-check, brainstorming, mermaid, harness, setup,
   codex) to specialized omb-* sub-skills.
 allowed-tools: Skill, AskUserQuestion, Bash, Read, Grep, Glob
@@ -43,7 +43,7 @@ Match the first word (case-insensitive) against the table below. If matched, inv
 | `plan-review` | `review`, `critique` | `omb-plan-review` | Multi-agent plan review and scoring |
 | `run` | `exec`, `execute` | `omb-run` | Plan execution with domain agent delegation |
 | `verify` | `check-impl`, `validate` | `omb-verify` | Post-implementation verification |
-| `document` | `doc`, `docs` | `omb-document` | Documentation generation and updates |
+| `doc` | `document`, `docs` | `omb-doc` | Documentation generation and updates |
 | `pr` | `ship` | `omb-pr` | GitHub PR creation with lint gate |
 | `prompt-guide` | `prompt` | `omb-prompt-guide` | Prompt engineering reference |
 | `prompt-review` | — | `omb-prompt-review` | Iterative prompt scoring and improvement |
@@ -75,7 +75,7 @@ If the first word does not match Priority 1, scan the full argument string for w
 | `verify implementation`, `check implementation`, `validate code`, `post-implementation check` | `omb-verify` |
 | `create plan`, `write plan`, `planning` | `omb-plan` |
 | `score plan`, `evaluate plan`, `review plan`, `critique plan` | `omb-plan-review` |
-| `update docs`, `write docs`, `generate documentation`, `document` | `omb-document` |
+| `update docs`, `write docs`, `generate documentation`, `document` | `omb-doc` |
 | `create pr`, `open pr`, `submit pr`, `pull request`, `push changes` | `omb-pr` |
 | `prompt tips`, `prompt best practices`, `how to prompt` | `omb-prompt-guide` |
 | `improve prompt`, `score prompt`, `review prompt` | `omb-prompt-review` |

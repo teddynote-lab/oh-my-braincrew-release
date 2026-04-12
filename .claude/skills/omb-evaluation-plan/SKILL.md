@@ -28,7 +28,7 @@ This skill is loaded by the `plan-evaluator` agent. It is NOT user-invocable.
 | 4 | Technical Specification | 6 | 15% | Tech stack table complete, file:line refs, architecture decisions |
 | 5 | TDD & Verification | 5 | 12% | Test strategy per domain, coverage targets, omb-tdd referenced |
 | 6 | Phase Structure | 5 | 10% | Efficient ordering, dependencies explicit, parallelization, [CP] marks |
-| 7 | Documentation Plan | 4 | 8% | docs/ update plan, omb-document referenced, specific paths |
+| 7 | Documentation Plan | 4 | 8% | docs/ update plan, omb-doc referenced, specific paths |
 | 8 | Risk Analysis | 4 | 8% | Risks with likelihood/impact, concrete mitigations, user verification items |
 | 9 | Completeness | 4 | 8% | All 8 sections present, TODO matches phases, no placeholders |
 
@@ -103,7 +103,7 @@ This skill is loaded by the `plan-evaluator` agent. It is NOT user-invocable.
 | docs.section | Documentation section present | Section 7 exists | PASS: dedicated section. FAIL: no Section 7 |
 | docs.paths | Specific docs/ paths listed | Table with file paths | PASS: `docs/api/auth.md` style paths. FAIL: "update docs" |
 | docs.actions | Create/update actions specified | "액션" column | PASS: 생성/수정 per file. FAIL: missing action type |
-| docs.skill-ref | omb-document skill referenced | Skill("omb-document") in section | PASS: explicit reference. FAIL: missing |
+| docs.skill-ref | omb-doc skill referenced | Skill("omb-doc") in section | PASS: explicit reference. FAIL: missing |
 
 ### 8. Risk Analysis (4 items, 8%)
 

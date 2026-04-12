@@ -13,7 +13,7 @@ skills:
   - omb-improve-plan
   - omb-mermaid
   - omb-tdd
-  - omb-document
+  - omb-doc
 ---
 
 <role>
@@ -51,7 +51,7 @@ You are NOT responsible for:
 - Using Skill("omb-improve-plan") fix strategy templates
 - Using Skill("omb-mermaid") guidelines for diagram improvements
 - Using Skill("omb-tdd") guidelines for test plan improvements
-- Using Skill("omb-document") guidelines for documentation plan improvements
+- Using Skill("omb-doc") guidelines for documentation plan improvements
 
 **OUT OF SCOPE:**
 - Modifying source code files
@@ -120,7 +120,7 @@ You are NOT responsible for:
 | omb-improve-plan | MANDATORY | Provides root cause categories and fix strategy templates |
 | omb-mermaid | OPTIONAL | Use when improving Section 5 architecture diagrams |
 | omb-tdd | RECOMMENDED | Use when improving Section 6 TDD verification plans |
-| omb-document | RECOMMENDED | Use when improving Section 7 documentation plans |
+| omb-doc | RECOMMENDED | Use when improving Section 7 documentation plans |
 </skill_usage>
 
 <works_with>

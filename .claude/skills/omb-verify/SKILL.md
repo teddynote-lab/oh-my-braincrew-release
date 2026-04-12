@@ -2,7 +2,7 @@
 name: omb-verify
 description: "Post-implementation verification — assembles 3-12 parallel verifiers (domain *-verify agents + @core-critique), runs static analysis, synthesizes consensus with 7-topic framework, auto-fixes P0/P1, and delivers DONE/RETRY/BLOCKED verdict."
 user-invocable: true
-argument-hint: "[plan file path] [--domain <filter>]"
+argument-hint: "[--worktree] [plan file path] [--domain <filter>]"
 ---
 
 # Implementation Verification (Multi-Agent Consensus)
@@ -51,7 +51,7 @@ flowchart TD
     S5 -->|"No P0/P1"| S9
     S8 -->|"Clean or<br/>max iterations"| S9
 
-    S9 -->|"DONE"| Next["Skill('omb-document')"]
+    S9 -->|"DONE"| Next["Skill('omb-doc')"]
     S9 -->|"RETRY"| Stop["End — user must fix"]
 
     classDef mandatory fill:#4a90d9,color:#fff,stroke:#2c5f8a
@@ -495,7 +495,7 @@ If the same issues persist across 2 iterations with no improvement, stop early:
 
 | Status Tag | verdict: field | Condition | Next Step |
 |------------|---------------|-----------|-----------|
-| `<omb>DONE</omb>` | `APPROVED` | 0 EV-P0, 0 EV-P1, all acceptance criteria met | Offer `Skill("omb-document")` |
+| `<omb>DONE</omb>` | `APPROVED` | 0 EV-P0, 0 EV-P1, all acceptance criteria met | Offer `Skill("omb-doc")` |
 | `<omb>RETRY</omb>` | `FAIL` | EV-P0 or EV-P1 remain after max iterations | End — user must fix manually |
 | `<omb>BLOCKED</omb>` | `BLOCKED` | Cannot verify (missing deps, env issues, no TODO tracker) | End — user must resolve blockers |
 
@@ -559,7 +559,7 @@ If the same issues persist across 2 iterations with no improvement, stop early:
 
 ### Post-Verdict Actions
 
-- **DONE (verdict: APPROVED):** Ask user if they want to proceed with `Skill("omb-document")` followed by `Skill("omb-pr")`
+- **DONE (verdict: APPROVED):** Ask user if they want to proceed with `Skill("omb-doc")` followed by `Skill("omb-pr")`
 - **RETRY (verdict: FAIL):** List specific remaining issues the user must address manually. Do NOT offer to proceed.
 - **BLOCKED (verdict: BLOCKED):** Explain what is blocking and how to resolve (e.g., "install pyright", "start dev server").
 

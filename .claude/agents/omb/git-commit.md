@@ -68,6 +68,10 @@ SELECTION GUIDANCE:
 - Use the appropriate commit message template tier (short/medium/full) based on change complexity.
 - (PR mode) PR title follows conventional commit format: `type(scope): description` — max 70 chars.
 - (PR mode) PR body MUST use the structured template (see `<pr_template>` section).
+- (PR mode) Check `OMB_DOCUMENTATION_LANGUAGE` env var for PR body language:
+  - `en` (default): PR body in English (headers + body text)
+  - `ko`: PR body in Korean (headers + body text). Only technical terms (API, endpoint, component, etc.), file paths, commands, and code references stay English.
+  - PR title is ALWAYS English (conventional commit format) regardless of this setting
 - (PR mode) Analyze ALL commits from `git log {base}..HEAD`, not just the latest commit.
 - (PR mode) Always assign exactly one label from the `<pr_labels>` list.
 - NEVER include `Co-Authored-By:` trailers referencing Claude, Anthropic, or `noreply@anthropic.com` in commit messages. No Claude/Anthropic attribution in any commit footer.
@@ -172,19 +176,24 @@ NEVER append: `Co-Authored-By:` lines referencing Claude or Anthropic. No AI att
 If the prompt contains `mode: pr`, continue with these steps after committing (or after step 2 if no changes to commit):
 
 11. Parse the base branch from prompt (default: `main`) and draft flag.
+11.5. Read `$OMB_DOCUMENTATION_LANGUAGE` env var. Default to `en` if unset. This determines which header set (English/Korean) to use from the `<pr_template>` header mapping table. When `ko`, write PR body descriptions in Korean (technical terms, file paths, commands stay English). PR title remains English regardless.
 12. Run `git log {base}..HEAD --oneline` to get all commits on this branch.
 13. Run `git log {base}..HEAD --format="%s%n%b"` for full commit messages.
 14. Run `git diff {base}...HEAD --stat` for file change summary.
 15. Run `git diff {base}...HEAD` to review the full diff for PR description context.
 16. Derive PR title in conventional commit format (`type(scope): description`, max 70 chars). The type should reflect the overall theme of all commits. If commits span multiple types, use the dominant one.
 17. Determine the PR label from the primary commit type (see `<pr_labels>` mapping).
-18. Compose the PR body using the `<pr_template>`. Fill each section from the commit analysis:
-    - Summary: 1-3 bullet points of what changed and why
-    - Root Cause / Motivation: why the change was needed
-    - Changes: specific list of changes
-    - Test Plan: verification steps with checkboxes
-    - Breaking Changes: only if applicable
-    - Checklist: mark items as checked where applicable
+18. Compose the PR body using the `<pr_template>`. Use the header set matching `$OMB_DOCUMENTATION_LANGUAGE` (from step 11.5). Fill each section from the commit analysis:
+    - Summary: 1-3 bullet points covering what, why, how
+    - Motivation / Context: why the change was needed, link to issues
+    - Changes: specific list (group by Added/Changed/Removed sub-headers if 5+ items total, otherwise flat list)
+    - Architecture (OPTIONAL): if `git diff --stat` shows files in 3+ distinct top-level directories or adds new modules/services — include a simple Mermaid `flowchart TD` or `graph LR`, max 8 nodes. Otherwise omit this section entirely.
+    - Screenshots (OPTIONAL): if diff includes UI component, CSS, or visual output files. Otherwise omit entirely.
+    - Test Plan: specific test commands with expected results
+    - Breaking Changes (OPTIONAL): if any API signature change, removed export, changed default, or config schema change — include What Breaks + Migration Guide. Otherwise omit entirely.
+    - Related Issues: extract `#N` references from commit messages. If none found, write "None".
+    - Checklist: mark items as `[x]` where confirmed
+    - Reviewer Notes (OPTIONAL): if the PR has non-obvious design decisions, performance trade-offs, or security considerations. Otherwise omit entirely.
 19. Push the branch: `git push -u origin HEAD`
 20. Create the PR using a HEREDOC for the body:
     ```bash
@@ -219,42 +228,234 @@ Rules:
 </pr_labels>
 
 <pr_template>
-Use this exact template structure for the PR body:
+Use this template structure for the PR body. The template has REQUIRED sections (always include) and OPTIONAL sections (include only when the specified condition is met — omit the entire section including its header when the condition is NOT met).
+
+## Language Selection
+
+Read `$OMB_DOCUMENTATION_LANGUAGE` (from step 11.5). Use the matching header set from this table. When `ko`, write body descriptions in Korean too (only technical terms, file paths, commands, code references stay English).
+
+| English Header | Korean Header |
+|----------------|---------------|
+| Summary | 요약 |
+| Motivation / Context | 동기 / 배경 |
+| Changes | 변경 사항 |
+| Added | 추가 |
+| Changed | 변경 |
+| Removed | 삭제 |
+| Architecture | 아키텍처 |
+| Screenshots | 스크린샷 |
+| Test Plan | 테스트 계획 |
+| Breaking Changes | 호환성 변경 |
+| What Breaks | 영향 범위 |
+| Migration Guide | 마이그레이션 가이드 |
+| Related Issues | 관련 이슈 |
+| Checklist | 체크리스트 |
+| Reviewer Notes | 리뷰어 참고 사항 |
+
+## Template Structure
+
+### REQUIRED SECTIONS (always include)
 
 ```markdown
 ## Summary
-- {What changed and why — 1-3 bullet points}
+- {WHAT changed — concrete description}
+- {WHY it was needed — the problem or requirement}
+- {HOW it was approached — key design choice}
 
-## Root Cause / Motivation
-{Why this change was needed. What problem or requirement triggered it.}
+## Motivation / Context
+{Detailed problem statement or requirement that triggered this change.
+Explain what was wrong, missing, or needed before this change.
+Link to related issues, discussions, or user reports if available.}
 
 ## Changes
-- {List of specific changes}
+
+### Added
+- {new files, features, APIs, endpoints}
+
+### Changed
+- {modified behavior, refactored code, updated configs}
+
+### Removed
+- {deleted files, deprecated features, removed dependencies}
 
 ## Test Plan
-- [ ] Unit tests added/updated
-- [ ] Integration tests pass
-- [ ] Manual testing steps
+- [ ] `{specific test command 1}` — expected: {result}
+- [ ] `{specific test command 2}` — expected: {result}
+- [ ] Manual testing: {specific steps to verify the change}
 - [ ] Lint check passes (`/omb-lint-check`)
+- [ ] Type check passes (`tsc --noEmit` or `pyright`)
 
-## Breaking Changes
-{If applicable — describe what breaks and migration path. Omit section if none.}
+## Related Issues
+{Closes #N, Refs #N — extracted from commit messages. Write "None" if no issues referenced.}
 
 ## Checklist
 - [ ] Branch name follows naming convention (`type/description`)
-- [ ] Commit messages follow commit template
+- [ ] Commit messages follow conventional commit template
 - [ ] Type check passes
 - [ ] Linter passes
 - [ ] No secrets committed
 - [ ] Documentation updated if needed
+- [ ] No unrelated changes bundled in this PR
 ```
 
-Rules:
-- Fill every section from commit analysis. Do not leave placeholder text.
-- Mark checklist items as `[x]` where you can confirm they are satisfied.
-- Omit the Breaking Changes section entirely if there are none.
-- PR title follows conventional commit format: `type(scope): description` — max 70 chars.
-- Use HEREDOC to pass the body to `gh pr create` for correct formatting.
+### OPTIONAL SECTIONS (include ONLY when condition is met)
+
+**Architecture** — Include ONLY when `git diff --stat` shows changed files in 3+ distinct top-level directories OR the diff introduces new modules/APIs/services:
+
+```markdown
+## Architecture
+
+```mermaid
+flowchart TD
+    A[Component Name] --> B[Component Name]
+    B --> C[Component Name]
+```
+
+{Brief explanation of the architectural change shown in the diagram.
+Describe the data flow or interaction pattern.}
+```
+
+Mermaid rules: use ONLY `flowchart TD` or `graph LR`. Maximum 3-8 nodes. No styling directives. Node labels should be actual component/module names from the code.
+
+**Screenshots** — Include ONLY when the diff modifies UI components, CSS/styling files, or visual output:
+
+```markdown
+## Screenshots
+{Describe what changed visually. If no screenshot tool is available, describe the before/after state.}
+```
+
+**Breaking Changes** — Include ONLY when the diff contains API signature changes, removed exports, changed defaults, or config schema changes:
+
+```markdown
+## Breaking Changes
+
+### What Breaks
+- {Specific API, behavior, or interface that changes}
+- {Who is affected — consumers, downstream services, etc.}
+
+### Migration Guide
+1. {Step-by-step instructions for consumers to adapt}
+2. {Include code examples if helpful}
+```
+
+**Reviewer Notes** — Include ONLY when the PR has non-obvious design decisions, performance trade-offs, or security considerations:
+
+```markdown
+## Reviewer Notes
+- {Point reviewers to specific files or code sections that need careful review}
+- {Explain trade-offs or alternative approaches considered}
+- {Flag any security-sensitive changes}
+```
+
+## Template Rules
+
+1. **[HARD] REQUIRED sections MUST always be present.** Do not omit Summary, Motivation, Changes, Test Plan, Related Issues, or Checklist.
+2. **[HARD] OPTIONAL sections MUST be omitted entirely (header + body) when their condition is NOT met.** Do not include empty optional sections.
+3. **Changes grouping**: Use Added/Changed/Removed sub-headers ONLY when there are 5+ total items. For fewer items, use a flat bullet list under `## Changes` without sub-headers.
+4. **Test Plan specificity**: Each test item MUST include the actual command to run and the expected result. No generic checkboxes like "tests pass."
+5. **Related Issues**: Extract `#N` patterns from all commit messages on the branch. If none found, write "None."
+6. **Checklist**: Mark items as `[x]` where you can confirm they are satisfied from the diff analysis.
+7. **Language**: Use the header set matching `$OMB_DOCUMENTATION_LANGUAGE`. When `ko`, body descriptions are also in Korean — only technical terms (API, endpoint, component, etc.), file paths, commands, and code references stay English.
+8. **PR title**: ALWAYS English, conventional commit format `type(scope): description`, max 70 chars.
+9. **Attribution**: NEVER include Claude/Anthropic attribution. The template content is the ONLY allowed PR body structure.
+10. **HEREDOC**: Always pass the PR body via HEREDOC to `gh pr create` for correct markdown formatting.
+
+## Common Mistakes (DO NOT do these)
+
+- **DO NOT include empty optional sections:**
+  ```
+  ## Architecture
+  (no architectural changes)        ← WRONG: omit the entire section instead
+  ```
+- **DO NOT use generic test items:**
+  ```
+  - [ ] Tests pass                   ← WRONG: too vague
+  - [ ] `pytest tests/api/ -v` — expected: all 12 tests pass  ← CORRECT
+  ```
+- **DO NOT mix languages incorrectly when ko:**
+  ```
+  ## Summary                         ← WRONG: should be ## 요약
+  - API endpoint를 추가했습니다       ← CORRECT: Korean body, English technical terms
+  ```
+
+## PR Body Example (English, feat with architecture change)
+
+```
+## Summary
+- Added OAuth2 login flow with Google and GitHub providers
+- Needed to replace the legacy session-based auth that didn't meet compliance requirements
+- Implemented using passport.js with JWT token strategy
+
+## Motivation / Context
+The legal compliance audit (Q1 2026) flagged cookie-based session storage as non-compliant
+with updated data residency requirements. Users reported frequent session drops on mobile.
+Refs #234, #256.
+
+## Changes
+
+### Added
+- `src/auth/oauth2.ts` — OAuth2 strategy configuration for Google and GitHub
+- `src/auth/jwt.ts` — JWT signing/verification utility
+- `src/middleware/auth.ts` — Bearer token authentication middleware
+- `tests/auth/test_oauth2.ts` — Integration tests for OAuth2 flow
+
+### Changed
+- `src/routes/login.ts` — Updated to use OAuth2 redirect flow
+- `src/config/cors.ts` — Added Authorization header to allowed headers
+
+### Removed
+- `src/middleware/session.ts` — Legacy cookie-based session middleware
+
+## Architecture
+
+```mermaid
+flowchart TD
+    Client[Client App] --> AuthRoute[/api/auth/login]
+    AuthRoute --> OAuth[OAuth2 Provider]
+    OAuth --> Callback[/api/auth/callback]
+    Callback --> JWT[JWT Service]
+    JWT --> Client
+```
+
+OAuth2 flow: client redirects to provider, callback receives token,
+JWT service issues app-specific tokens stored client-side.
+
+## Test Plan
+- [ ] `npm test -- --grep "oauth"` — expected: 8 tests pass
+- [ ] `npm run lint` — expected: 0 errors
+- [ ] Manual: complete Google login flow on localhost:3000
+- [ ] Lint check passes (`/omb-lint-check`)
+- [ ] Type check passes (`tsc --noEmit`)
+
+## Breaking Changes
+
+### What Breaks
+- All API endpoints now require Bearer token auth instead of session cookies
+- The `POST /api/auth/session` endpoint is removed
+
+### Migration Guide
+1. Replace cookie-based auth with `Authorization: Bearer <token>` header
+2. Obtain tokens via new `GET /api/auth/login?provider=google` flow
+3. See `docs/auth-migration.md` for detailed client-side changes
+
+## Related Issues
+Closes #234, Refs #256
+
+## Checklist
+- [x] Branch name follows naming convention (`type/description`)
+- [x] Commit messages follow conventional commit template
+- [x] Type check passes
+- [x] Linter passes
+- [x] No secrets committed
+- [x] Documentation updated if needed
+- [x] No unrelated changes bundled in this PR
+
+## Reviewer Notes
+- Security-sensitive: review `src/auth/jwt.ts` for token expiry and refresh logic
+- Trade-off: chose passport.js over custom OAuth implementation for maintainability
+```
+
+This example demonstrates: all required sections filled, Architecture included (3+ directories changed), Breaking Changes included (API contract change), Reviewer Notes included (security-sensitive), Related Issues extracted from commits, specific test commands with expected results.
 </pr_template>
 
 <execution_policy>

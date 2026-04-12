@@ -110,7 +110,7 @@ SELECTION GUIDANCE:
    f. Check: all quoted strings properly closed
    g. Check: node IDs are alphanumeric + underscore only
 10. Write/update the target markdown file with the diagram.
-11. If the diagram is for documentation in `docs/`, verify the target file follows `omb-document` conventions.
+11. If the diagram is for documentation in `docs/`, verify the target file follows `omb-doc` conventions.
 12. Report what was created, the diagram type used, node count, and validation status.
 </execution_order>
 

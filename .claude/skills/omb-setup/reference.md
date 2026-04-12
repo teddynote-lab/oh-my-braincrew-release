@@ -450,7 +450,7 @@ Run step-by-step for a complete development cycle, or invoke individually.
 | 3 | `omb:plan-review` | Review and score an existing plan | -- |
 | 4 | `omb:run [plan]` | Execute plan. Tracks progress in .omb/todo/ | Yes |
 | 5 | `omb:verify [plan]` | Post-implementation verification with parallel verifier pool | Yes |
-| 6 | `omb:document` | Generate or update documentation | Yes |
+| 6 | `omb:doc` | Generate or update documentation | Yes |
 | 7 | `omb:pr` | Create GitHub PR with lint gate | Yes |
 | 8 | `omb:release` | Version release with changelog and binary builds | No |
 | 9 | `omb:codex` | Codex CLI code review, adversarial review, and task delegation | No |

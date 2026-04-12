@@ -147,7 +147,7 @@ omb-react-perf, omb-react-composition, omb-ui-guidelines, omb-react-native
 omb-pr, omb-lint-check
 
 ### Codex Integration (user-invocable)
-omb-codex, omb-codex-review, omb-codex-adversarial-review, omb-codex-exec, omb-codex-setup
+omb-codex, omb-codex-review, omb-codex-adv-review, omb-codex-run, omb-codex-setup
 
 ### Deployment (user-invocable)
 omb-deploy-vercel, omb-vercel-cli
@@ -215,7 +215,7 @@ Run step-by-step for a complete development cycle, or invoke individually.
 | 3 | `omb:plan-review` | Review and score an existing plan | -- |
 | 4 | `omb:run [plan]` | Execute plan. Tracks progress in .omb/todo/ | Yes |
 | 5 | `omb:verify [plan]` | Post-implementation verification with parallel verifier pool | Yes |
-| 6 | `omb:document` | Generate or update documentation | Yes |
+| 6 | `omb:doc` | Generate or update documentation | Yes |
 | 7 | `omb:pr` | Create GitHub PR with lint gate | Yes |
 | 8 | `omb:release` | Version release with changelog and binary builds | No |
 | 9 | `omb:codex` | Codex CLI code review, adversarial review, and task delegation | No |

@@ -1,7 +1,7 @@
 ---
 name: omb-codex
 description: >
-  Codex CLI dispatcher — routes codex subcommands (review, adversarial-review, exec, setup)
+  Codex CLI dispatcher — routes codex subcommands (review, adv-review, run, setup)
   to specialized omb-codex-* wrapper skills. Use when the user wants code review by Codex,
   task delegation to Codex, or Codex CLI setup.
 user-invocable: true
@@ -39,8 +39,8 @@ Parse `$ARGUMENTS`:
 | Subcommand | Aliases | Target Skill | Purpose |
 |------------|---------|-------------|---------|
 | `review` | `rev` | `omb-codex-review` | Code review via Codex CLI |
-| `adversarial-review` | `adversarial`, `challenge` | `omb-codex-adversarial-review` | Adversarial code review — find failure modes |
-| `exec` | `task` | `omb-codex-exec` | Delegate a coding task to Codex |
+| `adv-review` | `adversarial-review`, `adversarial`, `challenge` | `omb-codex-adv-review` | Adversarial code review — find failure modes |
+| `run` | `exec`, `task` | `omb-codex-run` | Delegate a coding task to Codex |
 | `setup` | `login`, `auth` | `omb-codex-setup` | Verify CLI installation and authentication |
 
 ### Keyword Detection
@@ -50,8 +50,8 @@ If no subcommand match, scan for keywords:
 | Keywords | Target Skill |
 |----------|-------------|
 | `review code`, `check changes`, `review diff` | `omb-codex-review` |
-| `challenge`, `pressure test`, `find weaknesses`, `adversarial` | `omb-codex-adversarial-review` |
-| `delegate to codex`, `fix this with codex`, `codex task` | `omb-codex-exec` |
+| `challenge`, `pressure test`, `find weaknesses`, `adversarial` | `omb-codex-adv-review` |
+| `delegate to codex`, `fix this with codex`, `codex task` | `omb-codex-run` |
 | `install codex`, `authenticate`, `login` | `omb-codex-setup` |
 
 ### No Match
@@ -61,7 +61,7 @@ If neither matches, show available commands:
 ```
 Available codex commands:
   review              — Run Codex code review on local changes
-  adversarial-review  — Challenge review: find failure modes and risks
-  exec                — Delegate a task to Codex
+  adv-review          — Challenge review: find failure modes and risks
+  run                 — Delegate a task to Codex
   setup               — Verify Codex CLI installation and auth
 ```

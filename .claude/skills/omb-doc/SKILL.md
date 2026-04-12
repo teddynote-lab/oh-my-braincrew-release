@@ -1,5 +1,5 @@
 ---
-name: omb-document
+name: omb-doc
 description: "Service documentation authoring guide — category structure, naming conventions, templates, and lifecycle rules for the docs/ folder. Load this skill when creating or updating service documentation."
 user-invocable: true
 argument-hint: "[--worktree] [category or document path]"
@@ -21,7 +21,7 @@ Does NOT apply to: `CLAUDE.md`, `MEMORY.md` (always English).
 ## Argument Parsing
 
 ```
-omb-document [--worktree] [category or document path]
+omb-doc [--worktree] [category or document path]
 ```
 
 1. Check if the argument string contains `--worktree`

@@ -30,7 +30,7 @@ Before fixing individual issues, cluster related failures by root cause. Multipl
 | **UNDERSPECIFIED-TECH** | Multiple `tech.*` failures | Read the codebase to find actual file:line references. Complete the tech stack table. Document architecture decisions with rationale. |
 | **MISSING-TDD** | Multiple `tdd.*` failures | Add Section 6 using the template from 01-plan-writing.md. Specify pytest/vitest per domain. Set coverage targets (85%+ line, 80%+ branch). Add `Skill("omb-tdd")` reference. |
 | **PHASE-DISORDER** | Multiple `phase.*` failures | Reorder phases by dependency graph. Add "의존성" column. Group independent tasks for parallel execution. Mark critical path with [CP]. |
-| **DOCS-MISSING** | Multiple `docs.*` failures | Add Section 7 using the template from 01-plan-writing.md. List specific `docs/` paths with create/update actions. Add `Skill("omb-document")` and @doc-writer references. |
+| **DOCS-MISSING** | Multiple `docs.*` failures | Add Section 7 using the template from 01-plan-writing.md. List specific `docs/` paths with create/update actions. Add `Skill("omb-doc")` and @doc-writer references. |
 | **RISK-BLIND** | Multiple `risk.*` failures | Add Section 8. List concrete risks with likelihood/impact/mitigation table. Add user verification checklist for unverified assumptions. |
 | **INCOMPLETE** | Multiple `complete.*` failures | Fill all 8 section headers. Align TODO checklist with phase tasks. Replace all placeholders ({}, TBD, TODO). Add plan metadata (date, status). |
 
@@ -77,7 +77,7 @@ Before fixing individual issues, cluster related failures by root cause. Multipl
 
 3. **Add Skill() references** (if `agent.skill-ref` FAIL):
    - Add `Skill("omb-orch-{domain}")` for each task based on its domain
-   - Include domain-specific skills (omb-tdd, omb-mermaid, omb-document) where relevant
+   - Include domain-specific skills (omb-tdd, omb-mermaid, omb-doc) where relevant
 
 ### UNDERSPECIFIED-TECH fixes
 
@@ -134,7 +134,7 @@ Add Section 7 with:
 - Specific `docs/` file paths (not generic "update docs")
 - Create/update action per file
 - @doc-writer agent assignment
-- `Skill("omb-document")` reference
+- `Skill("omb-doc")` reference
 
 ### RISK-BLIND fixes
 

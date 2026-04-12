@@ -165,7 +165,7 @@ The plan-writer produces a complete plan document following the template in `.cl
 4. 구현 계획 상세 (phased breakdown with @agent and Skill() per task)
 5. 아키텍처 다이어그램 (optional, via Skill("omb-mermaid"))
 6. TDD 검증 계획 (coverage targets, test commands, via Skill("omb-tdd"))
-7. 문서 업데이트 계획 (docs/ paths, via Skill("omb-document"))
+7. 문서 업데이트 계획 (docs/ paths, via Skill("omb-doc"))
 8. 리스크 및 확인 사항 (risks, user verification items)
 
 **Wait for:** `<omb>DONE</omb>` with the plan file path in artifacts.

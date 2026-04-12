@@ -1,5 +1,5 @@
 ---
-name: omb-codex-adversarial-review
+name: omb-codex-adv-review
 description: "Run adversarial Codex review — challenges assumptions, finds failure modes, and pressure-tests implementation choices. Core Codex feature for deep code analysis."
 user-invocable: true
 argument-hint: "[--base <ref>] [focus-text]"

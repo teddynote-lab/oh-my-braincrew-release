@@ -13,7 +13,7 @@ skills:
   - omb-lsp-common
   - omb-mermaid
   - omb-tdd
-  - omb-document
+  - omb-doc
 ---
 
 <role>
@@ -52,7 +52,7 @@ You are NOT responsible for:
 - Reading `docs/` for reference documentation
 - Using Skill("omb-mermaid") guidelines for architecture diagrams
 - Using Skill("omb-tdd") guidelines for test planning
-- Using Skill("omb-document") guidelines for documentation planning
+- Using Skill("omb-doc") guidelines for documentation planning
 
 **OUT OF SCOPE:**
 - Modifying source code files
@@ -81,7 +81,7 @@ You are NOT responsible for:
 3. **Check reference docs** — Read relevant `docs/` files identified by @doc-explorer (architecture, API, database docs).
 4. **Define features** — Write Section 1 (사용자 요구사항) with summary, details, scope, and acceptance criteria.
 5. **Decompose into tasks** — Write Section 2 (기능 정의 및 기술 분석) with tech stack table and architecture decisions. Write Section 3 (TODO 체크리스트) ordered by implementation sequence. Write Section 4 (구현 계획 상세) with phased breakdown.
-6. **Add supporting sections** — Write Section 5 (아키텍처 다이어그램) if 3+ components interact. Write Section 6 (TDD 검증 계획) using omb-tdd guidelines. Write Section 7 (문서 업데이트 계획) using omb-document guidelines. Write Section 8 (리스크 및 확인 사항).
+6. **Add supporting sections** — Write Section 5 (아키텍처 다이어그램) if 3+ components interact. Write Section 6 (TDD 검증 계획) using omb-tdd guidelines. Write Section 7 (문서 업데이트 계획) using omb-doc guidelines. Write Section 8 (리스크 및 확인 사항).
 7. **Save plan** — Write the complete plan document to `.omb/plans/YYYY-MM-DD-kebab-name.md`.
 </execution_order>
 
@@ -121,7 +121,7 @@ You are NOT responsible for:
 | omb-lsp-common | OPTIONAL | Use LSP for verifying file:line references if LSP servers are running |
 | omb-mermaid | RECOMMENDED | Reference mermaid guidelines when writing Section 5 architecture diagrams |
 | omb-tdd | MANDATORY | Follow TDD guidelines when writing Section 6 test plans |
-| omb-document | MANDATORY | Follow documentation guidelines when writing Section 7 docs update plan |
+| omb-doc | MANDATORY | Follow documentation guidelines when writing Section 7 docs update plan |
 </skill_usage>
 
 <works_with>

@@ -77,7 +77,7 @@ Every plan document MUST include these sections in order:
 
 ### Section 7: 문서 업데이트 계획
 - Table: 문서 경로 | 액션(생성/수정) | 내용 | 담당(@doc-writer)
-- Reference Skill("omb-document")
+- Reference Skill("omb-doc")
 
 ### Section 8: 리스크 및 확인 사항
 - Risk table: 리스크 | 가능성 | 영향도 | 완화 방안
@@ -102,7 +102,7 @@ References a skill in `.claude/skills/`.
 ```markdown
 Skill("omb-tdd") → TDD 사이클 강제
 Skill("omb-mermaid") → 아키텍처 다이어그램 생성
-Skill("omb-document") → 문서 업데이트
+Skill("omb-doc") → 문서 업데이트
 ```
 
 ### Rules
@@ -238,7 +238,7 @@ Skill("omb-tdd") 로 TDD 사이클(RED-GREEN-IMPROVE) 강제.
 |-----------|------|------|------|
 | docs/{category}/{file}.md | 생성/수정 | {내용} | @doc-writer |
 
-Skill("omb-document") 로 문서 작성 가이드라인 적용.
+Skill("omb-doc") 로 문서 작성 가이드라인 적용.
 
 ## 8. 리스크 및 확인 사항
 

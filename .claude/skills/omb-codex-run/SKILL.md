@@ -1,5 +1,5 @@
 ---
-name: omb-codex-exec
+name: omb-codex-run
 description: "Delegate a coding task to Codex CLI — runs codex exec with the given prompt for investigation, bug fixes, or implementation."
 user-invocable: true
 argument-hint: "<task-description>"
@@ -44,9 +44,9 @@ codex exec "$ARGUMENTS"
 ## Examples
 
 ```
-/omb codex exec "investigate why the login API returns 500 on empty password"
-/omb codex exec "add input validation to the user registration endpoint"
-/omb codex exec "refactor the payment service to use async/await"
+/omb codex run "investigate why the login API returns 500 on empty password"
+/omb codex run "add input validation to the user registration endpoint"
+/omb codex run "refactor the payment service to use async/await"
 ```
 
 ## Rules
