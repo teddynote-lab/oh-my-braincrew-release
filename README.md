@@ -1,5 +1,13 @@
 # oh-my-braincrew (omb)
 
+[![Release](https://img.shields.io/github/v/release/teddynote-lab/oh-my-braincrew-release?style=flat-square)](https://github.com/teddynote-lab/oh-my-braincrew-release/releases/latest)
+[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-blue?style=flat-square)](https://github.com/teddynote-lab/oh-my-braincrew-release/releases/latest)
+[![Python](https://img.shields.io/badge/python-%3E%3D3.12-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-harness-cc785c?style=flat-square&logo=anthropic&logoColor=white)](https://docs.anthropic.com/en/docs/claude-code)
+[![License](https://img.shields.io/badge/license-Apache--2.0-green?style=flat-square)](LICENSE)
+
+**[English](README.md)** | **[한국어](README-ko.md)**
+
 Multi-agent orchestration harness for [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
 
 > Delegate, orchestrate, verify — never implement directly.
