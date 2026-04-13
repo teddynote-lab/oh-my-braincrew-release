@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.12] - 2026-04-13
+
+### Fixed
+- revert linux build to direct runner execution
+- replace bare except Exception with specific types
+- add non-root USER directive to api and ai Dockerfiles
+
+### Documentation
+- fix broken blockquote in issue scanner example
+
+### Maintenance
+- remove gitleaks secret scanning configuration
+- Merge pull request #48 from teddynote-lab/fix/issue-34-error-handling
+- Merge pull request #47 from teddynote-lab/fix/issue-40-docker-root-user-directive
+- Merge pull request #46 from teddynote-lab/fix/issue-19-chat-pydantic-validation
+
+
+
 ## [0.1.10] - 2026-04-13
 
 ### Maintenance
