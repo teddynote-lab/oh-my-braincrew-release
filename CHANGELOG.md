@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.26] - 2026-04-17
+
+### Added
+- display effort level from settings
+
+### Documentation
+- always run omb:wiki init, remove optional prompt
+
+### Maintenance
+- Merge pull request #68 from teddynote-lab/fix/codex-skills-preflight-127
+- apply ruff format to test_codex_preflight.py
+
+
+
 ## [0.1.25] - 2026-04-16
 
 ### Maintenance
