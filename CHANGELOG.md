@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.29] - 2026-04-18
+
+### Added
+- sync main from remote after omb:clean teardown
+
+### Fixed
+- auto-route omb:fix and omb:plan in Plan Mode
+
+### Improved
+- remove AUTO-GENERATED markers from omb-setup template
+- extract fix-writer section-structure into rule file
+
+### Maintenance
+- enable OMB_USE_CODEX in project settings
+- Merge pull request #76 from teddynote-lab/feat/omb-clean-foamy-star
+- Merge pull request #75 from teddynote-lab/chore/remove-deprecated-skills
+- remove deprecated omb-deploy-vercel, omb-vercel-cli, omb-pgvector-search
+- Merge pull request #74 from teddynote-lab/fix/omb-fix-plan-mode-support
+- Merge pull request #73 from teddynote-lab/fix/codex-use-scope
+
+
+
 ## [0.1.28] - 2026-04-18
 
 ### Fixed
