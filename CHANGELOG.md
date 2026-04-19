@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.34] - 2026-04-19
+
+### Added
+- self-evolving methodology-first feedback loop
+
+### Fixed
+- bundle omb-*-settings scripts into harness tarball
+
+### Improved
+- remove v1->v2 migration path - single-version clean init
+- v1→v2 category restructure — core 7 + adaptive profiles
+
+### Documentation
+- seed code_convention and enforce lint contract
+
+### Maintenance
+- Merge pull request #83 from teddynote-lab/feat/omb-wiki-kind-boot
+- apply ruff format to new feedback-loop tests
+- preserve historical MIGRATE-V2 audit log line
+- merge refactor/wiki-strip-v2 - remove v1->v2 migration path
+- Merge pull request #82 from teddynote-lab/refactor/wiki-categories-v2
+- apply ruff format to test_profile_detection
+- Merge pull request #81 from teddynote-lab/fix/release-bundle-setup-scripts
+
+
+
 ## [0.1.33] - 2026-04-19
 
 ### Fixed
