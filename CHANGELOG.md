@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.35] - 2026-04-19
+
+### Documentation
+- document update-gitignore subcommand and init step 9
+
+### Maintenance
+- Merge pull request #84 from teddynote-lab/feat/auto-gitignore-harness
+- apply ruff format to gitignore migration code
+
+
+
 ## [0.1.34] - 2026-04-19
 
 ### Added
