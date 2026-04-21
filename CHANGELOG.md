@@ -5,6 +5,57 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-04-21
+
+### Added
+- add DEV_NOTE PR-style template and body-structure rule
+- add v2 schema foundation - ADR-003, 5 templates, 6 rules, vocab MOCs
+- optimize omb-prompt-guide and omb-prompt-review for Claude 4.7
+
+### Fixed
+- tag validation bug + keywords/change-type rules
+- remove 6 more orphan v1 skill tests
+- remove orphan v1 tests and stale hook-conventions reference
+- replace literal f-string placeholder in fact-43
+- resolve verify CV-P1 findings
+
+### Improved
+- update 6 orchestrator skills + root docs for v2 paths
+- v2 scripts, SKILL rewrite, hook + graph cleanup, content migration
+- canonicalize omb status vocabulary
+
+### Documentation
+- update README + skills/agents/architecture for v2
+- sync for PR #88 focus-ring rule
+- sync wiki for status vocabulary canonicalization
+- capture prompt-guide/evaluation/review 4.7 update
+- replace placeholder with apps/web/src in fallback check
+
+### Maintenance
+- Merge pull request #96 from teddynote-lab/fix/wiki-vocab-tags-keywords
+- apply ruff format
+- Merge pull request #95 from teddynote-lab/feat/wiki-dev-note-template
+- Merge pull request #94 from teddynote-lab/feat/wiki-v2-obsidian-native
+- apply ruff format to 6 scripts/tests
+- update path-script regression test for wiki-summary.sh rename
+- add script tests + migrate sensitive-guard to @security-audit
+- Merge pull request #91 from teddynote-lab/docs/wiki-sync-focus-ring
+- regenerate graph.json post-merge
+- merge origin/main — accept canonical fact-43 phrasing
+- Merge pull request #92 from teddynote-lab/docs/wiki-status-vocabulary-sync
+- update INDEX timestamps for SPEC and ADR-002 after merge
+- merge main into docs/wiki-status-vocabulary-sync
+- merge origin/main, regenerate INDEX and graph files
+- Merge pull request #93 from teddynote-lab/docs/wiki-prompt-4-7-lessons
+- extend placeholder skip in status vocabulary gate
+- merge origin/main into docs/wiki-prompt-4-7-lessons
+- Merge pull request #90 from teddynote-lab/refactor/canonicalize-status-vocabulary
+- Merge pull request #89 from teddynote-lab/feat/prompt-guide-4-7-optimization
+- apply ruff format to test_status_vocabulary.py
+- Merge pull request #88 from teddynote-lab/feat/focus-ring-transient-yao
+
+
+
 ## [0.1.38] - 2026-04-20
 
 ### Improved
