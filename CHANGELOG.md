@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2026-04-25
+
+### Improved
+- remove stub redirects after migration to common/
+- restructure .claude/rules/ for progressive disclosure
+
+### Documentation
+- remove external attribution from coding-principles
+- refresh 30_Constraints notes after rules restructure
+- migrate rules paths and document agent rules: frontmatter
+
+### Maintenance
+- Merge pull request #102 from teddynote-lab/refactor/rules-stub-cleanup
+- Merge pull request #101 from teddynote-lab/refactor/claude-rules-happy-blanket
+- ruff format test_rules_contract.py
+
+
+
 ## [0.2.1] - 2026-04-21
 
 ### Fixed
