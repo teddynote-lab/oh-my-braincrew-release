@@ -30,9 +30,9 @@ irm https://raw.githubusercontent.com/teddynote-lab/oh-my-braincrew-release/main
 
 | Platform | Architecture | Binary |
 |----------|-------------|--------|
-| macOS | Apple Silicon (arm64) | [`oh-my-braincrew-v0.2.3-darwin-arm64`](https://github.com/teddynote-lab/oh-my-braincrew-release/releases/latest) |
-| Linux | x86_64 | [`oh-my-braincrew-v0.2.3-linux-amd64`](https://github.com/teddynote-lab/oh-my-braincrew-release/releases/latest) |
-| Windows | x86_64 | [`oh-my-braincrew-v0.2.3-windows-amd64.exe`](https://github.com/teddynote-lab/oh-my-braincrew-release/releases/latest) |
+| macOS | Apple Silicon (arm64) | [`oh-my-braincrew-v0.2.4-darwin-arm64`](https://github.com/teddynote-lab/oh-my-braincrew-release/releases/latest) |
+| Linux | x86_64 | [`oh-my-braincrew-v0.2.4-linux-amd64`](https://github.com/teddynote-lab/oh-my-braincrew-release/releases/latest) |
+| Windows | x86_64 | [`oh-my-braincrew-v0.2.4-windows-amd64.exe`](https://github.com/teddynote-lab/oh-my-braincrew-release/releases/latest) |
 
 ### Update / Uninstall
 
