@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.6] - 2026-04-30
+
+### Added
+- standardize next-step AskUserQuestion across pipeline skills
+- add LangGraph streaming transport convention (Redis Streams + SSE)
+
+### Documentation
+- document pipeline next-step AskUserQuestion prompts
+
+### Maintenance
+- Merge pull request #109 from braincrew-lab/feat/pipeline-next-step-prompts
+- normalize next_step_hint reminder wording in omb-codex-adv-review
+- Merge pull request #107 from braincrew-lab/fix/omb-codex-preflight
+- Merge pull request #108 from braincrew-lab/feat/langgraph-streaming-transport
+- apply ruff format to codex preflight tests
+- update codex preflight tests to new 3-signal contract
+
+
+
 ## [0.2.5] - 2026-04-29
 
 ### Added
