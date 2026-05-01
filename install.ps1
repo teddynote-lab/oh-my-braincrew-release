@@ -1,12 +1,12 @@
 #Requires -Version 5.1
 # install.ps1 — Download and install the latest oh-my-braincrew binary from GitHub Releases
-# Usage: iwr -useb https://raw.githubusercontent.com/teddynote-lab/oh-my-braincrew-release/main/scripts/install.ps1 | iex
+# Usage: iwr -useb https://raw.githubusercontent.com/braincrew-lab/oh-my-braincrew-release/main/scripts/install.ps1 | iex
 [CmdletBinding()]
 param()
 
 $ErrorActionPreference = "Stop"
 
-$Repo        = "teddynote-lab/oh-my-braincrew-release"
+$Repo        = "braincrew-lab/oh-my-braincrew-release"
 $BinaryName  = "oh-my-braincrew"
 $InstallDir  = "$env:LOCALAPPDATA\oh-my-braincrew"
 $GitHubApi   = "https://api.github.com/repos/$Repo/releases/latest"

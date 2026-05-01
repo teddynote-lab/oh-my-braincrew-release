@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # install.sh — Download and install the latest oh-my-braincrew binary from GitHub Releases
-# Usage: curl -fsSL https://raw.githubusercontent.com/teddynote-lab/oh-my-braincrew-release/main/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/braincrew-lab/oh-my-braincrew-release/main/install.sh | bash
 set -euo pipefail
 
-REPO="teddynote-lab/oh-my-braincrew-release"
+REPO="braincrew-lab/oh-my-braincrew-release"
 BINARY_NAME="oh-my-braincrew"
 INSTALL_DIR="${HOME}/.local/bin"
 GITHUB_API="https://api.github.com/repos/${REPO}/releases/latest"
