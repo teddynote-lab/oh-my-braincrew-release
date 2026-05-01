@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.9] - 2026-05-01
+
+### Fixed
+- reject HOME/root/harness paths before missing-claude early exit
+
+### Improved
+- sync UI rules and wiki to zustand for global state
+
+### Documentation
+- translate zustand.md "역할 분리" section to English
+- replace tanstack-store with zustand and expand tanstack-query
+
+### Maintenance
+- Merge pull request #112 from braincrew-lab/feat/omb-uninstall
+- apply ruff format and fix import sort to satisfy CI
+- Merge pull request #113 from braincrew-lab/refactor/ui-rules-zustand-sync
+- grandfather oversize zustand.md and tanstack-query.md
+
+
+
 ## [0.2.8] - 2026-04-30
 
 ### Maintenance
